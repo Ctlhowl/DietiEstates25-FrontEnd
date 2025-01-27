@@ -6,8 +6,13 @@ export const navbarData = [
     },
     {
         routeLink: '',
-        icon: 'apartment',
+        icon: 'home',
         label: 'Inserzioni'
+    },
+    {
+        routeLink: '',
+        icon: 'deployed_code_account',
+        label: 'Gestione Immobiliare'
     },
     {
         routeLink: '',

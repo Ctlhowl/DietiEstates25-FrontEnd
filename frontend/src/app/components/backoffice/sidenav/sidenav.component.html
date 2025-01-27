@@ -1,26 +1,23 @@
-<div class="bg-slate-400 fixed z-1 top-0 w-3xs h-screen shadow-md">
-    <div class="flex items-center p-2">
-        <button class="bg-white text-center w-8 min-w-8 rounded-md text-2xl font-black cursor-pointer border-0">D</button>
-        @if (!collapsed) { 
-            <div class="ml-10 text-2xl font-bold text-white">DietiEstate25</div>
-            <button class="ml-auto cursor-pointer w-8 h-8 rounded-md">
-                <span class="material-symbols-outlined bg-white font-black">menu_open</span>
-            </button>
-        }
+<div class="sidebar">
+    <div class="sidebar-logo text-center">
+        <span class="icon"> 
+            <img class="logo" src="assets/logo.png">
+        </span>
+        <div class="text">DietiEstate25</div>
+        <hr class="custom-line">
     </div>
-    <ul class="">
-        <li class="">
-            @for (item of navData; track $index) {
-                <a [routerLink]="[item.routeLink]"  class="">
-                    <span class="material-symbols-outlined">
-                        {{item.icon}}
-                    </span>
-                
-                    @if(!collapsed){
-                        <span class="">{{item.label}}</span>    
-                    }
-                </a>
-            }
-        </li>
-    </ul>
+    <nav class="nav flex-column">
+        @for (item of navData; track $index) {
+            <a [routerLink]="[item.routeLink]"  class="nav-link">
+                <span class="icon"> 
+                    <span class="material-symbols-outlined">{{item.icon}}</span>
+                </span>
+                <span class="description">{{item.label}}</span>    
+            </a>
+        }
+    </nav>
 </div>
+
+<main class="main-contianer">
+    <router-outlet />
+</main>

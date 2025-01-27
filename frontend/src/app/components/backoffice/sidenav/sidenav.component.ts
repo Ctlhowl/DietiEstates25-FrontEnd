@@ -1,14 +1,13 @@
 import { Component } from '@angular/core';
 import { navbarData } from './nav-data';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-sidenav',
-  imports: [RouterLink],
+  imports: [RouterLink, RouterOutlet],
   templateUrl: './sidenav.component.html',
   styleUrl: './sidenav.component.css'
 })
 export class SidenavComponent {
-  collapsed = false;
   navData = navbarData;
 }
