@@ -3,7 +3,7 @@ import { Addons } from "./addons";
 import { File } from "./file";
  
 
-export interface EstateHandle {
+export interface Estate{
     id: number;
     title: string;
     category: string;
