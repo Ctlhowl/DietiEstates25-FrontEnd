@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SidebarComponent } from './sidebar.component';
+import { EsateListComponent } from './esate-list.component';
 
-describe('SidebarComponent', () => {
-  let component: SidebarComponent;
-  let fixture: ComponentFixture<SidebarComponent>;
+describe('EsateListComponent', () => {
+  let component: EsateListComponent;
+  let fixture: ComponentFixture<EsateListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SidebarComponent]
+      imports: [EsateListComponent]
     })
     .compileComponents();
-    
-    fixture = TestBed.createComponent(SidebarComponent);
+
+    fixture = TestBed.createComponent(EsateListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
