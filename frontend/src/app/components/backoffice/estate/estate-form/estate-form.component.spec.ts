@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EsateListComponent } from './esate-list.component';
+import { EstateFormComponent } from './estate-form.component';
 
-describe('EsateListComponent', () => {
-  let component: EsateListComponent;
-  let fixture: ComponentFixture<EsateListComponent>;
+describe('EstateFormComponent', () => {
+  let component: EstateFormComponent;
+  let fixture: ComponentFixture<EstateFormComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EsateListComponent]
+      imports: [EstateFormComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(EsateListComponent);
+    fixture = TestBed.createComponent(EstateFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

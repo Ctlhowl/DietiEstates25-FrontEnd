@@ -1,9 +1,19 @@
+.material-symbols-outlined {
+    font-size: 32px;
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 0,
+    'GRAD' 200,
+    'opsz' 48;
+  }
+
 .sidebar{
     flex-direction: column;
     height: 100vh;
     width: 200px;
     background-color: #e0e1dd;
-    transition: width 0.3s
+    transition: width 0.3s;
+    display: flex;
 }
 
 .sidebar .nav-link{
@@ -14,6 +24,7 @@
     color: #0d1b2a;
     margin-top: 25px;
 }
+
 
 .sidebar-logo{
     align-items: center;
@@ -41,7 +52,7 @@
   }
 
 .sidebar .description {
-    font-size: 14px;
+    font-size: 18px;
 }
 
 .sidebar .nav-link:hover {
@@ -65,11 +76,7 @@
 
     .sidebar .description {
         display: none;
-    }
-    
-    .main-content{
-        margin-left: 60px;
-    }
+    } 
 
     .sidebar-logo .text{
         display: none;
@@ -82,7 +89,13 @@
 
     .sidebar-logo .logo{
         justify-content: center;
-        width:30px;
-        height: 30px;
+        width:32px;
+        height: 32px;
+    }
+
+    .sidebar .nav-link:hover {
+        background-color: #778da9;
+        color: #e0e1dd;
+        width: 65px;
     }
 }
