@@ -1,0 +1,104 @@
+.material-symbols-outlined {
+    font-size: 32px;
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 0,
+    'GRAD' 200,
+    'opsz' 48;
+  }
+
+.sidebar{
+    flex-direction: column;
+    min-height: 100vh;
+    height: 100%;
+    width: 200px;
+    background-color: #e0e1dd;
+    transition: width 0.3s;
+    display: flex;
+}
+
+.sidebar .nav-link{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 10px 20px;
+    color: #0d1b2a;
+    margin-top: 25px;
+}
+
+
+.sidebar-logo{
+    align-items: center;
+    padding: 20px;
+    height: 200px;
+    justify-content: center;
+}
+
+.sidebar-logo .text{
+    color: #0d1b2a;
+    margin: 20px 0;
+    font-size: 24px;
+}
+
+.sidebar-logo .logo{
+    width:75px;
+    height: 75px;
+}
+
+.custom-line {
+    border: none;
+    height: 2px;
+    background-color: #000;
+    margin: 20px 0;
+}
+
+.sidebar .description {
+    font-size: 18px;
+}
+
+.sidebar .nav-link:hover {
+    background-color: #778da9;
+    color: #e0e1dd;
+}
+
+.sidebar-footer{
+    margin-top: auto;
+}
+
+@media (max-width: 576px) {
+    .sidebar {
+        width: 65px;
+        min-height: 100vh;
+        height: 100%;
+    }
+
+    .sidebar .nav-link{
+        margin-top: 55px;
+        justify-content: center;
+    }
+
+    .sidebar .description {
+        display: none;
+    } 
+
+    .sidebar-logo .text{
+        display: none;
+    }
+    
+    .sidebar-logo{
+        justify-content: center;
+        height: 25px;
+    }
+
+    .sidebar-logo .logo{
+        justify-content: center;
+        width:32px;
+        height: 32px;
+    }
+
+    .sidebar .nav-link:hover {
+        background-color: #778da9;
+        color: #e0e1dd;
+        width: 65px;
+    }
+}
