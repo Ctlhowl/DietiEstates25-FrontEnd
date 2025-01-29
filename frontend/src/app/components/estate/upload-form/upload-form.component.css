@@ -1,0 +1,38 @@
+.dropzone {
+    width: 100%;
+    padding: 20px;
+    border: 2px dashed #1b263b;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+  }
+  
+.dropzone.active {
+    background-color: #e3f2fd;
+  }
+  
+.material-symbols-outlined {
+    font-size: 32px;
+    color: #c1121f;
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 0,
+    'GRAD' 200,
+    'opsz' 48;
+}
+
+.material-symbols-outlined:hover{
+    color: #780000;
+}
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    border-bottom: 1px solid #ddd;
+}

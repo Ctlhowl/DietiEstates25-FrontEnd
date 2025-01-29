@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LocationService } from '../../../services/location/location.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { UploadFormComponent } from '../upload-form/upload-form.component';
 
 type County = {
   county: string,
@@ -14,7 +15,7 @@ type City = {
 
 @Component({
   selector: 'app-estate-form',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, UploadFormComponent],
   standalone: true,
   templateUrl: './estate-form.component.html',
   styleUrl: './estate-form.component.css'
