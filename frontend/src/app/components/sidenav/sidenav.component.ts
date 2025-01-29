@@ -2,7 +2,7 @@ import { IMAGE_CONFIG } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 
-export type NavItem = {
+type NavItem = {
   routeLink: string,
   icon: string,
   label: string,

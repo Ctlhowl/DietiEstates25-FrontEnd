@@ -4,134 +4,204 @@
             <h2>Aggiungi Inserzione</h2>        
         </div>
     </div>
-    
+    <hr class="custom-line-bold">
     <!-- INFORMAZIONI GENERALI -->
-    <div class="row m-3">
-        <hr class="custom-line">
-        <h4 class="mb-3">Informazioni Generali</h4>
-        <div class="col-sm-6 mb-3">
-                <label for="title" class="form-label">Titolo</label>
-                <input type="text" class="form-control" id="title">
+    <form [formGroup]="estateForm" (ngSubmit)="saveEstate()">
+        <div class="row m-3">
+            <h4 class="mb-3">Informazioni Generali</h4>
+            <div class="col-sm mb-3">
+                    <label for="title" class="form-label">Titolo</label>
+                    <input type="text" class="form-control" id="title" required>
+            </div>
+            <div class="col-sm-2 mb-3">
+                <label for="category" class="form-label">Categoria</label>
+                <select class="form-select"id="category">
+                   
+                </select>
+            </div>
+            <div class="col-sm-2 mb-3">
+                    <label for="contract" class="form-label">Tipo Contratto</label>
+                    <select class="form-select" id="contract" required>
+                        <option value="Affitto" selected>Affitto</option>
+                        <option value="Vendita">Vendita</option>
+                        </select>
+            </div>
+            <div class="col-sm-2 mb-3">
+                    <label for="amount" class="form-label">Prezzo</label>
+                    <input type="number" step="0.01" min="0.00" class="form-control" id="amount" required>
+            </div>
         </div>
-        <div class="col-sm-3 mb-3">
-                <label for="contract" class="form-label">Tipo Contratto</label>
-                <select class="form-select" id="contract">
-                    <option value="Affitto" selected>Affitto</option>
-                    <option value="Vendita">Vendita</option>
-                    </select>
+    
+        <div class="row m-3">
+            <div class="col mb-3">
+                    <label for="description" class="form-label">Descrizione</label>
+                    <textarea class="form-control" id="description" rows="3" required></textarea>
+            </div>
         </div>
-        <div class="col-sm-3 mb-3">
-                <label for="amount" class="form-label">Prezzo</label>
-                <input type="number" step="0.01" class="form-control" id="amount">
-        </div>
-    </div>
-
-    <div class="row m-3">
-        <div class="col mb-3">
-                <label for="description" class="form-label">Descrizione</label>
-                <textarea class="form-control" id="description" rows="3"></textarea>
-        </div>
-    </div>
-
-    <!-- INFORMAZIONI LOCAZIONE -->
-    <div class="row m-3">
-        <hr class="custom-line">
-        <h4 class="mb-3">Informazioni Locazione</h4>
-
-        <div class="col-sm mb-3">
-            <label for="county" class="form-label">Provincia</label>
-            <select class="form-select"id="county">
-                @for (item of counties; track $index) {
-                    <option [ngValue]="item" (click)="setCities(item)"> {{item.countyCode}} - {{item.county}}</option>
-                }
-            </select>
-        </div>
-        <div class="col-sm mb-3">                
-                <label for="city" class="form-label">Comune</label>
-                @if(isLoading){
-                    <div class="spinner-border text-secondary ">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>  
-                }
-                <select class="form-select" id="city">
-                    @for (item of cities; track $index) {
-                        <option [ngValue]="item">{{item.postalCode}} - {{item.city}}</option>
+    
+        <!-- INFORMAZIONI LOCAZIONE -->
+        <div class="row m-3">
+            <hr class="custom-line">
+            <h4 class="mb-3">Informazioni Locazione</h4>
+    
+            <div class="col-sm mb-3">
+                <label for="county" class="form-label">Provincia</label>
+                <select class="form-select"id="county" required>
+                    @for (item of counties; track $index) {
+                        <option [ngValue]="item" (click)="setCities(item)"> {{item.countyCode}} - {{item.county}}</option>
                     }
                 </select>
+            </div>
+            <div class="col-sm mb-3">                
+                    <label for="city" class="form-label">Comune</label>
+                    @if(isLoading){
+                        <div class="spinner-border text-secondary ">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>  
+                    }
+                    <select class="form-select" id="city" required>
+                        @for (item of cities; track $index) {
+                            <option [ngValue]="item">{{item.postalCode}} - {{item.city}}</option>
+                        }
+                    </select>
+            </div>
+        </div>
+    
+        <div class="row m-3">
+            <div class="col-sm-8 mb-3">
+                <label for="street" class="form-label">Via</label>
+                <input type="text" class="form-control" id="street" required>
+            </div>
+            <div class="col-sm-4 mb-3">
+                <label for="street-number" class="form-label">N. Civico</label>
+                <input type="number" step="1" class="form-control" id="street-number" required>
+            </div>
+        </div>
+    
+        <!-- INFORMAZIONI SPECIFICHE -->
+        <div class="row m-3">
+            <hr class="custom-line">
+            <h4 class="mb-3">Informazioni Specifiche</h4>
+    
+            <div class="col-sm-3 mb-3">
+                <label for="mtq" class="form-label">Mtq</label>
+                <input type="number" step="0.01" min="0.00" class="form-control" id="mtq" required>
+            </div>
+    
+            <div class="col-sm-3 mb-3">
+                <label for="rooms" class="form-label">N. Stanze</label>
+                <input type="number" step="0.01" min="0.00" class="form-control" id="rooms" required>
+            </div>
+    
+            <div class="col-sm-3 mb-3">
+                <label for="services" class="form-label">N. Servizi</label>
+                <input type="number" step="0.01" min="0.00" class="form-control" id="services" required>
+            </div>
+    
+            <div class="col-sm-3 mb-3">
+                <label for="energy-class" class="form-label">Classe Energetica</label>
+                <select class="form-select" id="energy-class" required>
+                    <option value="A3" selected>A3</option>
+                    <option value="A2">A2</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                    <option value="E">E</option>
+                    <option value="F">F</option>
+                    </select>
+                </div>
+        </div>
+    
+        <!-- CARATTERISTICHE AGGIUNTIVE -->
+        <div class="row m-3">
+            <hr class="custom-line">
+            <h4 class="mb-3">Caratteristiche Aggiuntive</h4>
+              <div class="col-sm mb-3">
+                    <input type="checkbox" class="btn-check" id="btn-check-1" autocomplete="off">
+                    <label style="width: 100px;" class="btn btn-outline-secondary m-1" for="btn-check-1">Garage</label>
+    
+                    <input type="checkbox" class="btn-check" id="btn-check-2" autocomplete="off">
+                    <label style="width: 100px;" class="btn btn-outline-secondary m-1" for="btn-check-2">Piscina</label>
+    
+                    <input type="checkbox" class="btn-check" id="btn-check-3" autocomplete="off">
+                    <label style="width: 100px;" class="btn btn-outline-secondary m-1" for="btn-check-3">Ascensore</label>
+    
+                    <input type="checkbox" class="btn-check" id="btn-check-4" autocomplete="off">
+                    <label style="width: 100px;" class="btn btn-outline-secondary m-1" for="btn-check-4">Portineria</label>
+    
+                    <input type="checkbox" class="btn-check" id="btn-check-5" autocomplete="off">
+                    <label style="width: 100px;" class="btn btn-outline-secondary m-1" for="btn-check-5">Giardino</label>
+            </div>
+        </div>
+    
+        <!-- UPLOAD FILE -->
+        <div class="row m-3">
+            <hr class="custom-line">
+            <h4 class="mb-3">Foto</h4>
+            <div class="col">
+                <h5>Foto Caricate</h5>
+                <table class="table table-striped-columns">
+                    <thead class="text-center">
+                        <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">Nome File</th>
+                          <th scope="col"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @for (item of files; track $index) {
+                            <tr>
+                                <th scope="row">{{$index}}</th>
+                                <th></th>
+                                <th><button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteFile" (click)="onModalDeleteFile(item)">Elimina</button></th>
+                            </tr>
+                        }
+                        <tr>
+                            <th scope="row" class="text-center">1</th>
+                            <th></th>
+                            <th class="text-center">
+                                <button type="button" class="btn">
+                                        <span class="material-symbols-outlined">delete_forever</span>
+                                </button>
+                            </th>
+                        </tr>
+                      </tbody>                    
+                </table>
+            </div>
+            <div class="col mt-4">
+                <div class="mb-3">
+                    <input type="file" class="form-control"  accept=".jpg, .png, .jpeg" required>
+                    <div class="m-3 text-center">
+                        <button style="width: 200px;" class="btn btn-success">Salva Foto</button>
+                    </div>           
+                </div>                
+            </div>
+        </div>
+
+        <hr class="custom-line-bold">
+        <div class="text-center">
+            <button type="submit" style="width: 200px;" class="btn btn-success" [disabled]="estateForm.invalid">Salva</button>
+        </div>
+    </form>
+
+     <!-- Delete Outlay Modal 
+     <div class="modal fade" id="deleteFile" tabindex="-1" aria-labelledby="deleteFileLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="deleteFileLabel">Elimina File</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+               <p>Sei sicuro di voler eliminare il file <span class="text-danger">{{file?.name}}</span>?</p>
+               <div class="modal-footer">
+                <button type="button" id="delete-file-form" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                <button type="submit" class="btn btn-danger" (click)="onDeleteFile(deleteFile?.id)">Elimina</button>
+               </div>
+            </div>
+          </div>
         </div>
     </div>
-
-    <div class="row m-3">
-        <div class="col-sm-8 mb-3">
-            <label for="street" class="form-label">Via</label>
-            <input type="text" class="form-control" id="street">
-        </div>
-        <div class="col-sm-4 mb-3">
-            <label for="street-number" class="form-label">N. Civico</label>
-            <input type="number" step="1" class="form-control" id="street-number">
-        </div>
-    </div>
-
-    <!-- INFORMAZIONI SPECIFICHE -->
-    <div class="row m-3">
-        <hr class="custom-line">
-        <h4 class="mb-3">Informazioni Specifiche</h4>
-
-        <div class="col-sm-3 mb-3">
-            <label for="mtq" class="form-label">Mtq</label>
-            <input type="number" step="0.01" class="form-control" id="mtq">
-        </div>
-
-        <div class="col-sm-3 mb-3">
-            <label for="rooms" class="form-label">N. Stanze</label>
-            <input type="number" step="0.01" class="form-control" id="rooms">
-        </div>
-
-        <div class="col-sm-3 mb-3">
-            <label for="services" class="form-label">N. Servizi</label>
-            <input type="number" step="0.01" class="form-control" id="services">
-        </div>
-
-        <div class="col-sm-3 mb-3">
-            <label for="energy-class" class="form-label">Classe Energetica</label>
-            <select class="form-select" id="energy-class">
-                <option value="A3" selected>A3</option>
-                <option value="A2">A2</option>
-                <option value="A">A</option>
-                <option value="B">B</option>
-                <option value="C">C</option>
-                <option value="D">D</option>
-                <option value="E">E</option>
-                <option value="F">F</option>
-                </select>
-        	</div>
-    </div>
-
-    <!-- CARATTERISTICHE AGGIUNTIVE -->
-    <div class="row m-3">
-        <hr class="custom-line">
-        <h4 class="mb-3">Caratteristiche Aggiuntive</h4>
-          <div class="col-sm mb-3">
-                <input type="checkbox" class="btn-check" id="btn-check-1" autocomplete="off">
-                <label style="width: 100px;" class="btn btn-outline-secondary m-1" for="btn-check-1">Garage</label>
-
-                <input type="checkbox" class="btn-check" id="btn-check-2" autocomplete="off">
-                <label style="width: 100px;" class="btn btn-outline-secondary m-1" for="btn-check-2">Piscina</label>
-
-                <input type="checkbox" class="btn-check" id="btn-check-3" autocomplete="off">
-                <label style="width: 100px;" class="btn btn-outline-secondary m-1" for="btn-check-3">Ascensore</label>
-
-                <input type="checkbox" class="btn-check" id="btn-check-4" autocomplete="off">
-                <label style="width: 100px;" class="btn btn-outline-secondary m-1" for="btn-check-4">Portineria</label>
-
-                <input type="checkbox" class="btn-check" id="btn-check-5" autocomplete="off">
-                <label style="width: 100px;" class="btn btn-outline-secondary m-1" for="btn-check-5">Giardino</label>
-        </div>
-    </div>
-
-    <!-- UPLOAD FILE -->
-    <div class="row m-3">
-        <hr class="custom-line">
-        <h4 class="mb-3">Foto</h4>
-    </div>
+    -->
 </div>

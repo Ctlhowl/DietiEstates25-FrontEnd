@@ -1,6 +1,28 @@
 .custom-line {
     border: none;
     height: 2px;
-    background-color: #000;
-    margin: 20px 0;
+    background-color: #415a77;
+    margin: 10px 40xp 10px 40px;
+}
+
+.custom-line-bold {
+    border: none ;
+    height: 2px;
+    background-color: #415a77;
+    margin: 10px 0 10px;
+}
+
+
+.material-symbols-outlined {
+    font-size: 32px;
+    color: #c1121f;
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 0,
+    'GRAD' 200,
+    'opsz' 48;
+}
+
+.material-symbols-outlined:hover{
+    color: #780000;
 }
