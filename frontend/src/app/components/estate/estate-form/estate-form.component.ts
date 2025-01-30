@@ -4,8 +4,8 @@ import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } fr
 import { UploadFormComponent } from '../upload-form/upload-form.component';
 import { Estate } from '../../../interfaces/estate';
 import { Location } from '../../../interfaces/location';
-import { Addons } from '../../../interfaces/addons';
 import { EstateService } from '../../../services/estate/estate.service';
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 
 type County = {
   county: string,
@@ -19,7 +19,11 @@ type City = {
 
 @Component({
   selector: 'app-estate-form',
-  imports: [ReactiveFormsModule, UploadFormComponent],
+  imports: [
+    ReactiveFormsModule,
+    UploadFormComponent,
+    NgxSpinnerModule
+  ],
   standalone: true,
   templateUrl: './estate-form.component.html',
   styleUrl: './estate-form.component.css'
@@ -27,11 +31,14 @@ type City = {
 export class EstateFormComponent implements OnInit{
   counties: County[] = [];
   cities: City[] = [];
-  isLoading: boolean = false;
 
   estateForm!: FormGroup;
 
-  constructor(private locationService: LocationService, private estateService: EstateService){}
+  constructor(
+    private locationService: LocationService,
+    private estateService: EstateService,
+    private spinner: NgxSpinnerService,
+  ) { }
   
   ngOnInit(): void {
     this.setCountries();
@@ -92,8 +99,9 @@ export class EstateFormComponent implements OnInit{
    */
   protected setCities(county: County): void{
     this.cities = [];
-    this.isLoading = true;
-
+    this.spinner.show();
+    
+    
     this.locationService.getCities(county.countyCode).subscribe(
       {
         next: (response: any) => {
@@ -108,7 +116,9 @@ export class EstateFormComponent implements OnInit{
           console.error('Errore durante il caricamento delle province:', err);
         },
         complete: () => {
-          this.isLoading = false;
+          setTimeout(() => {
+            this.spinner.hide();
+          },400);
         }
       });
   }
@@ -117,34 +127,43 @@ export class EstateFormComponent implements OnInit{
    * @description Getter to access the FormArray 
    * 
   */
-protected get addons(): FormArray {
-  return this.estateForm.get('addons') as FormArray;
-}
+  protected get addons(): FormArray {
+    return this.estateForm.get('addons') as FormArray;
+  }
 
-/** 
- * @description Method to handle checkbox selection 
- * */
-protected onCheckboxChange(event: Event) {
-  const checkbox = event.target as HTMLInputElement;
-  const addonsArray = this.addons;
-  const value = checkbox.value;
+  /** 
+   * @description Method to handle checkbox selection 
+  * */
+  protected onCheckboxChange(event: Event) {
+    const checkbox = event.target as HTMLInputElement;
+    const addonsArray = this.addons;
+    const value = checkbox.value;
 
-  if (checkbox.checked) {
-    addonsArray.push(new FormControl(value)); 
-  } else {
-    const index = addonsArray.controls.findIndex(control => control.value === value);
-    if (index !== -1) {
-      addonsArray.removeAt(index);
+    if (checkbox.checked) {
+      addonsArray.push(new FormControl(value)); 
+    } else {
+      const index = addonsArray.controls.findIndex(control => control.value === value);
+      if (index !== -1) {
+        addonsArray.removeAt(index);
+      }
     }
   }
-}
-
 
   /**
    * @description Contact EstateHandle microservices to save the estate data
    */
   protected saveEstate() {
-    this.estateService.saveEstate(this.getEstateData()).subscribe();
+    this.spinner.show();
+
+    this.estateService.saveEstate(this.getEstateData()).subscribe(
+      {
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          },400);
+        }
+      }
+    );
   }
 
   /**
