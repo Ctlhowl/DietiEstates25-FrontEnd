@@ -4,7 +4,7 @@ import { File } from "./file";
  
 
 export interface Estate{
-    id: number;
+    id?: number;
     title: string;
     category: string;
     description: string;
@@ -17,5 +17,5 @@ export interface Estate{
     location: Location;
     userId: number;
     addons: Addons[];
-    files: File[];
+    files?: File[];
 }

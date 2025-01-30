@@ -1,5 +1,7 @@
 export interface Location {
-    id: number;
-    addressLine1: string;
-    addressLine2: string;
+    id?: number;
+    county: string;
+    city: string;
+    postalCode: string;
+    street: string;
 }

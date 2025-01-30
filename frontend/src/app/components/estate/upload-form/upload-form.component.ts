@@ -12,7 +12,11 @@ export class UploadFormComponent {
   files: File[] = [];
   dropzoneActive = false;
 
-  handleDrop(event: DragEvent | Event) {
+  /**
+   * @description Handles the file drop event from a drag-and-drop action or file input selection
+   * @param event The drop event (DragEvent) or file input change event (Event)
+   */
+  protected handleDrop(event: DragEvent | Event) {
     event.preventDefault();
     event.stopPropagation();
 
@@ -33,14 +37,25 @@ export class UploadFormComponent {
     this.dropzoneActive = false;
   }
 
-  dropzoneState(isHovered: boolean) {
+  /**
+   * @description Updates the dropzone active state based on user interaction.
+   * @param isHovered Indicates whether the dropzone is hovered
+   */
+  protected dropzoneState(isHovered: boolean) {
     this.dropzoneActive = isHovered;
   }
 
-  removeFile(index: number) {
+  /**
+   * @description Removes a file from the list based on the given index
+   * @param index The index of the file to be removed
+   */
+  protected removeFile(index: number) {
     this.files.splice(index, 1);
   }
 
+  /**
+   * @description Uploads the selected files
+   */
   uploadFiles() {
     console.log('Uploading files:', this.files);
     alert('File caricati con successo!');
