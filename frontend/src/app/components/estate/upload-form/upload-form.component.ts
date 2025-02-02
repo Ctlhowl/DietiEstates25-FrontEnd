@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import * as uuid from 'uuid';
 
 @Component({
   selector: 'app-upload-form',
@@ -12,6 +13,22 @@ export class UploadFormComponent {
   files: File[] = [];
   dropzoneActive = false;
 
+  @Output() filesData = new EventEmitter<File[]>();
+  
+  public getFiles() {
+    this.filesData.emit(this.files)
+  }
+
+  /**
+   * Add UUID to the file name
+   * @param originalFile File to be rename
+   * @returns {File} renamed with UUID
+   */
+  renameFile(originalFile: File): File {
+    const uniqueName = `${uuid.v4()}-${originalFile.name}`;
+    return new File([originalFile], uniqueName, { type: originalFile.type });
+  }
+
   /**
    * @description Handles the file drop event from a drag-and-drop action or file input selection
    * @param event The drop event (DragEvent) or file input change event (Event)
@@ -23,17 +40,17 @@ export class UploadFormComponent {
     if (event instanceof DragEvent) {
       const files = event.dataTransfer?.files;
       if (files) {
-        this.files = [...this.files, ...Array.from(files)];
+
+        this.files = [...this.files, ...Array.from(files).map(this.renameFile)]
       }
     } else if (event instanceof Event) {
       const fileInput = event.target as HTMLInputElement;
       const files = fileInput.files;
   
       if (files) {
-        this.files = [...this.files, ...Array.from(files)];
+        this.files = [...this.files,  ...Array.from(files).map(this.renameFile)];
       }
     }
-
     this.dropzoneActive = false;
   }
 
@@ -51,13 +68,5 @@ export class UploadFormComponent {
    */
   protected removeFile(index: number) {
     this.files.splice(index, 1);
-  }
-
-  /**
-   * @description Uploads the selected files
-   */
-  uploadFiles() {
-    console.log('Uploading files:', this.files);
-    alert('File caricati con successo!');
   }
 }

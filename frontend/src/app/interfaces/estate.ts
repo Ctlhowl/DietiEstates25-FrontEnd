@@ -1,6 +1,6 @@
 import { Location } from "./location";
 import { Addons } from "./addons";
-import { File } from "./file";
+import { S3File } from "./s3File";
  
 
 export interface Estate{
@@ -17,5 +17,5 @@ export interface Estate{
     location: Location;
     userId: number;
     addons: Addons[];
-    files?: File[];
+    files?: S3File[];
 }

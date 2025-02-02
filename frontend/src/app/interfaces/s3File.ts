@@ -1,6 +1,6 @@
-export interface File{
-    id: number;
-    bucket: string;
+export interface S3File{
+    id?: number;
+    url?: string; 
     name: string;
     contentType: string;
     size: number;

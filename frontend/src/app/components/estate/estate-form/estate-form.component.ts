@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { LocationService } from '../../../services/location/location.service';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UploadFormComponent } from '../upload-form/upload-form.component';
@@ -6,6 +6,10 @@ import { Estate } from '../../../interfaces/estate';
 import { Location } from '../../../interfaces/location';
 import { EstateService } from '../../../services/estate/estate.service';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
+import { S3File } from '../../../interfaces/s3File';
+import { FileService } from '../../../services/file/file.service';
+import { ApiResponse } from '../../../serialization/apiResponse';
+
 
 type County = {
   county: string,
@@ -31,12 +35,16 @@ type City = {
 export class EstateFormComponent implements OnInit{
   counties: County[] = [];
   cities: City[] = [];
+  files: File[] = [];
+
+  @ViewChild(UploadFormComponent) uploadComponent!: UploadFormComponent; 
 
   estateForm!: FormGroup;
 
   constructor(
     private locationService: LocationService,
     private estateService: EstateService,
+    private fileService: FileService,
     private spinner: NgxSpinnerService,
   ) { }
   
@@ -45,6 +53,7 @@ export class EstateFormComponent implements OnInit{
     this.setEstateForm();
   }
 
+  
   /**
    * @description Initializes the estateForm with form controls and validation rules.
    */
@@ -67,6 +76,104 @@ export class EstateFormComponent implements OnInit{
         addons: new FormArray([]),
       }
     )
+  }
+
+  /**
+   * @description Retrive an estate object from estateForm
+   * @returns Location object
+   */
+  private getEstateData(): Estate {
+    const rental = this.estateForm.get('rooms')?.value == 'Affitto' ? true : false;
+    const location = this.getLocationData();
+
+    return {
+      title: this.estateForm.get('title')?.value,
+      category: this.estateForm.get('category')?.value,
+      description: this.estateForm.get('description')?.value,
+      rental: rental,
+      price: this.estateForm.get('price')?.value,
+      mtq: this.estateForm.get('mtq')?.value,
+      energyClass: this.estateForm.get('energyClass')?.value,
+      rooms: this.estateForm.get('rooms')?.value,
+      services: this.estateForm.get('services')?.value,
+      location: location,
+      userId: 1,
+      addons: this.addons.controls.map(control => control.value),
+      files: this.getFileData()
+    };
+  }
+
+  /**
+   * @description Retrive a location object from estateForm
+   * @returns Location object
+   */
+  private getLocationData(): Location {
+    const street = this.estateForm.get('street')?.value + ' ' + this.estateForm.get('streetNumber')?.value 
+    const postalCode = this.estateForm.get('city')?.value.postalCode;
+    const city = this.estateForm.get('city')?.value.city;
+
+    return {
+      county: this.estateForm.get('county')?.value,
+      city: city,
+      postalCode: postalCode,
+      street: street
+    };
+  }
+
+  /**
+   * @description Retrive a list of files from uploadComponent
+   */
+  private getFileData(): S3File[] {
+    if (this.uploadComponent) {
+      this.uploadComponent.getFiles();
+    }
+
+    const savedFile: S3File[] = [];
+    this.files.forEach((file: File) => {  
+      const s3file = {
+        name: file.name,
+        contentType: file.type,
+        size: file.size
+      }
+
+      savedFile.push(s3file)
+    })
+
+    return savedFile;
+  }
+  
+  /**
+   * Upload a file on S3
+   * @param file File to be uploaded on S3
+   */
+  private uploadFileOnS3(file: File) {
+    this.fileService.getPresignedUrl(file.name).subscribe(
+      {
+        next: (response: ApiResponse<string>) => {
+          const presignedUrl = response.data;
+          this.fileService.uploadFileToS3(presignedUrl, file).subscribe();
+        },
+        error: (err) => {
+          console.log('Errore nel caricamento: ' + err.message);
+        }
+      }
+    );
+  }
+  
+  /**
+   * Bind uploadComponent to this component to retrive file
+   * @param files List of files of uploadComponent
+   */
+   protected retriveFileFromUploader(files: File[]) {
+    this.files = files;
+  }
+
+  /** 
+   * @description Getter to access the FormArray 
+   * 
+  */
+  private get addons(): FormArray {
+    return this.estateForm.get('addons') as FormArray;
   }
 
   /**
@@ -123,13 +230,7 @@ export class EstateFormComponent implements OnInit{
       });
   }
 
-  /** 
-   * @description Getter to access the FormArray 
-   * 
-  */
-  protected get addons(): FormArray {
-    return this.estateForm.get('addons') as FormArray;
-  }
+  
 
   /** 
    * @description Method to handle checkbox selection 
@@ -155,55 +256,18 @@ export class EstateFormComponent implements OnInit{
   protected saveEstate() {
     this.spinner.show();
 
-    this.estateService.saveEstate(this.getEstateData()).subscribe(
+    const estate = this.getEstateData();
+
+    this.files.forEach(file => {
+      this.uploadFileOnS3(file);
+    });
+
+    this.estateService.saveEstate(estate).subscribe(
       {
         complete: () => {
-          setTimeout(() => {
-            this.spinner.hide();
-          },400);
+          this.spinner.hide();
         }
       }
     );
-  }
-
-  /**
-   * @description Retrive an estate object from estateForm
-   * @returns Location object
-   */
-  private getEstateData(): Estate {
-    const rental = this.estateForm.get('rooms')?.value == 'Affitto' ? true : false;
-    const location = this.getLocationData();
-
-    return {
-      title: this.estateForm.get('title')?.value,
-      category: this.estateForm.get('category')?.value,
-      description: this.estateForm.get('description')?.value,
-      rental: rental,
-      price: this.estateForm.get('price')?.value,
-      mtq: this.estateForm.get('mtq')?.value,
-      energyClass: this.estateForm.get('energyClass')?.value,
-      rooms: this.estateForm.get('rooms')?.value,
-      services: this.estateForm.get('services')?.value,
-      location: location,
-      userId: 1,
-      addons: this.addons.controls.map(control => control.value),
-    };
-  }
-
-  /**
-   * @description Retrive a location object from estateForm
-   * @returns Location object
-   */
-  private getLocationData(): Location {
-    const street = this.estateForm.get('street')?.value + ' ' + this.estateForm.get('streetNumber')?.value 
-    const postalCode = this.estateForm.get('city')?.value.postalCode;
-    const city = this.estateForm.get('city')?.value.city;
-
-    return {
-      county: this.estateForm.get('county')?.value,
-      city: city,
-      postalCode: postalCode,
-      street: street
-    };
   }
 }
