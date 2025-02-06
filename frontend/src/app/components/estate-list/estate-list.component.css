@@ -1,0 +1,27 @@
+.scrollable{
+    height: 600px;
+    overflow-y: auto; 
+    border: 1px solid #ccc; 
+    padding: 10px;
+}
+
+.limited-text {
+    display: -webkit-box;
+    line-clamp: 4;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.property-image {
+    width: 350px;
+    height: 250px;
+    object-fit: cover;
+}
+ 
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    filter: invert(1);
+    background-size: 200%;
+}

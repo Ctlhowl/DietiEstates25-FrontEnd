@@ -262,7 +262,7 @@ export class EstateFormComponent implements OnInit{
       this.uploadFileOnS3(file);
     });
 
-    this.estateService.saveEstate(estate).subscribe(
+    this.estateService.save(estate).subscribe(
       {
         complete: () => {
           this.spinner.hide();
