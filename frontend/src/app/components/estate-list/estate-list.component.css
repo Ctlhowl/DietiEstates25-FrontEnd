@@ -1,3 +1,10 @@
+.custom-line-bold {
+    border: none ;
+    height: 2px;
+    background-color: #415a77;
+    margin: 10px 0 10px;
+}
+
 .scrollable{
     height: 600px;
     overflow-y: auto; 
@@ -17,11 +24,94 @@
 .property-image {
     width: 350px;
     height: 250px;
-    object-fit: cover;
+    object-fit: scale-down;
 }
  
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
     filter: invert(1);
     background-size: 200%;
+}
+
+
+.material-symbols-outlined {
+    font-size: 32px;
+    
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 0,
+    'GRAD' 200,
+    'opsz' 48;
+}
+
+.delete{
+    color: #c1121f;
+    justify-content: space-between;
+    display: flex;
+    align-items: center;
+}
+
+.delete:hover{
+    color: #780000;
+}
+
+.edit{
+    color: #f4a261;
+    justify-content: space-between;
+    display: flex;
+    align-items: center;
+}
+
+.edit:hover{
+    color: #e76f51;
+}
+
+.offer{
+    color: #0077b6;
+    justify-content: space-between;
+    display: flex;
+    align-items: center;
+}
+
+.offer:hover{
+    color: #0077b6;
+}
+
+.new-estate{
+    justify-content: center;
+    display: flex;
+    align-items: center;
+}
+
+.title{
+    color: #0077b6;
+    font-weight: bold;
+}
+
+.btn-success{
+    border-color: #0077b6;
+    background-color: #0077b6;
+}
+
+.btn-success:hover{
+    border-color: #023e8a;
+    background-color: #023e8a;
+}
+
+@media (max-width: 950px){
+    .offer b{
+        display: none;
+    }
+
+    .delete b{
+        display: none;
+    }
+
+    .edit b{
+        display: none;
+    }
+    .new-estate b{
+        display: none;
+    }
+    
 }

@@ -30,4 +30,8 @@ export class EstateService {
   public getByFilter(filter: Filter): Observable<ApiResponse<Estate[]>> {
     return this.http.post<ApiResponse<Estate[]>>(`${this.apiEstateSearch}`, filter);
   }
+
+  public getById(id: number): Observable<ApiResponse<Estate>> {
+    return this.http.get<ApiResponse<Estate>>(`${this.apiEstateSearch}/${id}`);
+  }
 }

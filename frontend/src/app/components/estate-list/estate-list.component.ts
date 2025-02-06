@@ -2,10 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Estate } from '../../interfaces/estate';
 import { EstateService } from '../../services/estate/estate.service';
 import { ApiResponse } from '../../serialization/apiResponse';
+import { CommonModule } from '@angular/common';
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-estate-list',
-  imports: [],
+  imports: [CommonModule, RouterLink, RouterOutlet],
   templateUrl: './estate-list.component.html',
   styleUrl: './estate-list.component.css'
 })
@@ -29,7 +31,7 @@ export class EstateListComponent implements OnInit {
         },
         error: (err) => {
           console.error('Errore durante il caricamento delle inserzioni:', err);
-        },
+        }
       });
   }
 

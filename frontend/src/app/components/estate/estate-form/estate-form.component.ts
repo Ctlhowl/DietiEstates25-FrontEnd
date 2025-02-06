@@ -9,6 +9,7 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { S3File } from '../../../interfaces/s3File';
 import { FileService } from '../../../services/file/file.service';
 import { ApiResponse } from '../../../serialization/apiResponse';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 type County = {
@@ -40,19 +41,51 @@ export class EstateFormComponent implements OnInit{
   @ViewChild(UploadFormComponent) uploadComponent!: UploadFormComponent; 
 
   estateForm!: FormGroup;
+  isEditMode = false;
+  estateId: number | null = null;
 
   constructor(
     private locationService: LocationService,
     private estateService: EstateService,
     private fileService: FileService,
     private spinner: NgxSpinnerService,
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
   
   ngOnInit(): void {
+    this.route.paramMap.subscribe(params => {
+      this.estateId = Number(params.get('id'));
+
+      if (this.estateId != null) {
+        this.isEditMode = true;
+        this.loadEstateData();
+      }
+      
+      this.setEstateForm();
+    });
+
     this.setCountries();
-    this.setEstateForm();
   }
 
+  private loadEstateData() {
+    this.estateService.getById(this.estateId!).subscribe(
+      {
+        next: (response: ApiResponse<Estate>) => {
+          const estateForm = {
+            
+          }
+          this.estateForm.patchValue(response.data);
+        },
+        error: (err) => {
+          console.log('Errore nel caricamento: ' + err.message);
+        },
+        complete: () => {
+          console.log(this.estateForm.value);
+        }
+      }
+    );
+  }
   
   /**
    * @description Initializes the estateForm with form controls and validation rules.
@@ -266,6 +299,7 @@ export class EstateFormComponent implements OnInit{
       {
         complete: () => {
           this.spinner.hide();
+          this.router.navigate(['/estate']);
         }
       }
     );

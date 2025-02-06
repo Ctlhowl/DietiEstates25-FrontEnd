@@ -26,3 +26,13 @@
 .material-symbols-outlined:hover{
     color: #780000;
 }
+
+.btn-success{
+    border-color:  #778da9;
+    background-color: #778da9;
+}
+
+.btn-success:hover{
+    border-color: #415a77;
+    background-color: #415a77;
+}

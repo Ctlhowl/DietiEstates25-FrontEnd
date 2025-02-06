@@ -3,8 +3,10 @@ import { EstateFormComponent } from './components/estate/estate-form/estate-form
 import { EstateListComponent } from './components/estate-list/estate-list.component';
 
 export const routes: Routes = [
-    
-    {path: '', component: EstateListComponent}
+    { path: 'estate', component: EstateListComponent },
+    { path: 'estate/new', component: EstateFormComponent },
+    { path: 'estate/edit/:id', component: EstateFormComponent },
+    { path: '**', redirectTo: 'estate' }
 ];
 
 export class AppRoutingModule {}

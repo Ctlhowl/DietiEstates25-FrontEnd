@@ -32,33 +32,39 @@ export class SidenavComponent implements OnInit{
 
   ngOnInit(): void {
     this.navDataEmployee = [
+    /*
       {
-        routeLink: '/',
+        routeLink: '/account',
         icon: 'person',
         label: 'Account',
         role: 'employee',
       },
+    */
       {
-        routeLink: '/',
+        routeLink: '/estate',
         icon: 'home',
         label: 'Inserzioni',
         role: 'employee',
       },
+      /*
       {
-        routeLink: '/',
-        icon: 'logout',
-        label: 'Logout',
-        role: 'employee',
-      }
+          routeLink: '/',
+          icon: 'logout',
+          label: 'Logout',
+          role: 'employee',
+        }
+      */
     ];
 
     this.navDataAdmin = [
+    /*
       {
         routeLink: '/',
         icon: 'deployed_code_account',
         label: 'Gestione Immobiliare',
         role: 'admin',
       }
+    */
     ]
   }
 }
