@@ -58,7 +58,7 @@
                 <label for="county" class="form-label">Provincia</label>
                 <select class="form-select"id="county" formControlName="county" required>
                     @for (item of counties; track $index) {
-                        <option [ngValue]="item.county" (click)="setCities(item)"> {{item.countyCode}} - {{item.county}}</option>
+                        <option [ngValue]="item" (click)="setCities(item)"> {{item.countyCode}} - {{item.county}}</option>
                     }
                 </select>
             </div>
