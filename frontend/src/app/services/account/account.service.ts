@@ -1,0 +1,23 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { ApiResponse } from '../../serialization/apiResponse';
+import { User } from '../../interfaces/user';
+import { environment } from '../../../environments/environments';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AccountService {
+  private apiAccount = `${environment.apiAccount}`; 
+
+  constructor(private http: HttpClient) { }
+
+  public getUserInfo(): Observable <ApiResponse<User>> {
+    return this.http.get<ApiResponse<User>>(`${this.apiAccount}/4`); // l'id dell'user dovrà essere concatenato in seguito al login
+  }
+
+  updateUser(updatedUser: User): Observable<ApiResponse<User>> {
+    return this.http.put<ApiResponse<User>>(`${this.apiAccount}`,updatedUser);
+  }
+}
