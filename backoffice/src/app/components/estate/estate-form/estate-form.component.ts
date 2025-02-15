@@ -79,6 +79,59 @@ export class EstateFormComponent implements OnInit{
 
   /**
    * @description Initializes the estateForm with form controls and validation rules
+  private loadEstateData() {
+    this.estateService.getById(this.estateId!).subscribe(
+      {
+        next: (response: ApiResponse<Estate>) => {
+
+          console.log(response);
+
+          const data = response.data;
+          const locationData = response.data.location;
+
+          const countyData: County = {
+            county: locationData.county,
+            countyCode: locationData.countyCode
+          }
+
+          const cityData: City = {
+            city: locationData.city,
+            postalCode: locationData.postalCode
+          }
+
+          this.setCities(countyData);
+                    
+          const estateForm = {
+            title: data.title,
+            category: data.category,
+            description: data.description,
+            rental: data.rental ? "Affitto" : "Vendita",
+            price: data.price,
+            mtq: data.mtq,
+            energyClass: data.mtq,
+            rooms: data.rooms,
+            services: data.services,
+            county: countyData,
+            city: cityData,
+            street: locationData.street.split(", ")[0],
+            streetNumber: locationData.street.split(", ")[1],
+            addons: data.addons,
+            files: data.files
+          }
+          this.estateForm.patchValue(estateForm);
+        },
+        error: (err) => {
+          console.log('Errore nel caricamento: ' + err.message);
+        },
+        complete: () => {
+          console.log(this.estateForm.value);
+        }
+      }
+    );
+  }
+  
+  /**
+   * @description Initializes the estateForm with form controls and validation rules.
    */
   private setEstateForm() {
     this.estateForm = new FormGroup(
