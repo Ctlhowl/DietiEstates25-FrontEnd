@@ -1,0 +1,110 @@
+<div class="container p-5">
+    <div class="row text-center mb-3">
+        <div class="col">
+            <h3>Lista Inserzione</h3>        
+        </div>
+    </div>
+    <hr class="custom-line-bold">
+
+    <div class="row overflow-auto" style="height: 600px">
+        @for (estate of estates; track $index) {
+            <div>
+                <div class="card shadow-sm m-2">
+                    <div class="row g-0">
+                        <!-- Sezione immagini -->
+                        <div class="col-md-4">
+                            <div id="carousel{{estate.id}}" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-inner">
+                                    @if(estate.files?.length != 0){
+                                        @for (file of estate.files; track $index) {
+                                            <div class="carousel-item" [ngClass]="{'active': $index === 0}">
+                                                <img [src]="file.url" class="property-image w-100">
+                                            </div>
+                                        }
+
+                                        <button class="carousel-control-prev" type="button" [attr.data-bs-target]="'#carousel' + estate.id"  data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Previous</span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button" [attr.data-bs-target]="'#carousel' + estate.id" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Next</span>
+                                        </button>
+                                        
+                                    }@else {
+                                        <div class="carousel-item active">
+                                            <img src="assets/icons/no-foto.png" class="property-image w-100">
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+            
+                        <!-- Sezione contenuti -->
+                        <div class="col-md-8" style="cursor: pointer;">
+                            <div class="card-body d-flex flex-column" style="height: 100%;">
+                                <h6 class="card-title title">{{ estate.category.name }} - {{ estate.title }}</h6>
+                                <h4 class="fw-bold">{{ estate.price }} €</h4>
+                                <p class="mb-1 text-muted">
+                                    {{ estate.rooms }} camere · {{ estate.services }} servizi · {{ estate.mtq }} m²
+                                </p>
+                                <p class="card-text limited-text">{{ estate.description }}</p>
+            
+                                <div class="mt-auto d-flex justify-content-between">
+                                    <div class="offer">  
+                                        <span class="material-symbols-outlined me-1">list</span>
+                                        <b>Gestisci Offerte</b>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <div class="edit me-5" [routerLink]="['/estate/edit', estate.id]" routerLinkActive="router-link-active">  
+                                            <span class="material-symbols-outlined">edit</span>
+                                            <b>Modifica</b>
+                                        </div>
+                                        <div class="delete"  data-bs-toggle="modal" data-bs-target="#deleteModal"  (click)="openDeleteModal(estate)">  
+                                            <span class="material-symbols-outlined">delete</span>
+                                            <b>Elimina</b>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <hr class="custom-line-bold">
+    <div class="row mt-5">
+        <div class="text-center">
+            <a type="button" class="btn btn-success w-25" [routerLink]="['/estate/new']" routerLinkActive="router-link-active">
+                <div class="new-estate">
+                    <span class="material-symbols-outlined">add</span>
+                    <b>Nuova Inserzione</b>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="deleteModalLabel">Conferma Eliminazione</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          Sei sicuro di voler eliminare l'inserzione a "{{estate?.title}}"?  Perderai tutti i dati collegati ad essa.
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="deleteModal-estate" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+          <button type="button" class="btn btn-danger"  (click)="deleteEstate(estate?.id)">Elimina</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+<router-outlet></router-outlet>
