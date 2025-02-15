@@ -41,16 +41,18 @@ export class EstateListComponent implements OnInit {
     this.estate = estate;
   }
 
-  protected deleteEstate(estateId: number | undefined = -1): void{
+  protected deleteEstate(estateId: number | null): void{
     document.getElementById('deleteModal-estate')?.click();
 
-    this.estateService.delete(estateId).subscribe(
-      {
-        complete: () => {
-          this.setEstate();
+    if (estateId != null) {
+      this.estateService.delete(estateId).subscribe(
+        {
+          complete: () => {
+            this.setEstate();
+          }
         }
-      }
-    );
+      );
+    }
   }
 
 }
