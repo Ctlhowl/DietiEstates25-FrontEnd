@@ -15,7 +15,7 @@
                         <div class="col-md-4">
                             <div id="carousel{{estate.id}}" class="carousel slide" data-bs-ride="carousel">
                                 <div class="carousel-inner">
-                                    @if(estate.files?.length != 0){
+                                    @if(estate.files.length != 0){
                                         @for (file of estate.files; track $index) {
                                             <div class="carousel-item" [ngClass]="{'active': $index === 0}">
                                                 <img [src]="file.url" class="property-image w-100">

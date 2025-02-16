@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import * as uuid from 'uuid';
 import { S3File } from '../../../interfaces/s3File';
+import { FileService } from '../../../services/file/file.service';
+import { ApiResponse } from '../../../serialization/apiResponse';
 
 @Component({
   selector: 'app-upload-form',
@@ -11,22 +13,24 @@ import { S3File } from '../../../interfaces/s3File';
   styleUrl: './upload-form.component.css'
 })
 export class UploadFormComponent {
-  files: File[] = [];
-  dropzoneActive = false;
+  protected files: File[] = [];
+  protected dropzoneActive = false;
 
   @Input() filesEdit: S3File[] = [];
   @Output() filesData = new EventEmitter<File[]>();
   
 
+  constructor(private fileService: FileService) { }
+
   /**
-   * Notify parent
+   * @description Notify parent
    */
   public notify(): void {
     this.filesData.emit(this.files)
   }
 
   /**
-   * Add UUID to the file name
+   * @description Add UUID to the file name
    * @param originalFile File to be rename
    * @returns {File} renamed with UUID
    */
@@ -60,6 +64,8 @@ export class UploadFormComponent {
 
       if (newFiles.length > 0) {
         this.files = [...this.files, ...newFiles];
+        this.files.forEach(file => { this.uploadFileOnS3(file) });
+        
         this.notify();
       }
   
@@ -83,11 +89,41 @@ export class UploadFormComponent {
   protected removeFile(index: number, fileName: string): void {
     this.filesEdit.splice(index, 1);
     this.files.splice(index, 1);
+    this.deleteFileFromS3(fileName);
     
     this.notify();
   }
 
-  private s3Remove(fileName: string): void {
-    
+  /**
+   * @description Delete a file from S3
+   * @param {string} fileName File's name to delete 
+   */
+  private deleteFileFromS3(fileName: string): void {
+    this.fileService.getPresignedDelete(fileName).subscribe(
+      {
+        next: (response: ApiResponse<string>) => {
+          const presignedUrl = response.data;
+          this.fileService.deleteFileToS3(presignedUrl).subscribe();
+        },
+        complete: () => {
+          this.fileService.deleteMetaFileEstate(fileName).subscribe();
+        }
+      }
+    );
   }
+
+   /**
+     * @description Upload a file on S3
+     * @param {File} file File to be uploaded on S3
+     */
+    private uploadFileOnS3(file: File): void {
+      this.fileService.getPresignedUpload(file.name).subscribe(
+        {
+          next: (response: ApiResponse<string>) => {
+            const presignedUrl = response.data;
+            this.fileService.uploadFileToS3(presignedUrl, file).subscribe();
+          }
+        }
+      );
+    }
 }

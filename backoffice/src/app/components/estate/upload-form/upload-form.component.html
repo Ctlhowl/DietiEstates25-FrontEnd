@@ -13,7 +13,8 @@
                 }
             </ul>
          }
-         @else if (files.length > 0){
+         
+         @if (files.length > 0){
             <ul>
                 @for(file of files; track $index){
                     <li>
@@ -24,7 +25,9 @@
                     </li>
                 }
             </ul>
-        }@else {
+        }
+        
+        @if(files.length == 0 && filesEdit.length == 0){
             <p>Nessun file presente</p>
         }
     </div>

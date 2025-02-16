@@ -7,23 +7,16 @@ import { Location } from '../../../interfaces/location';
 import { EstateService } from '../../../services/estate/estate.service';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { S3File } from '../../../interfaces/s3File';
-import { FileService } from '../../../services/file/file.service';
 import { ApiResponse } from '../../../serialization/apiResponse';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AddonService } from '../../../services/addon/addon.service';
 import { Addon } from '../../../interfaces/addon';
 import { CategoryService } from '../../../services/category/category.service';
 import { Category } from '../../../interfaces/category';
+import { take } from 'rxjs';
 
-type County = {
-  county: string,
-  countyCode: string
-};
-
-type City = {
-  city: string
-  postalCode: string
-}
+type County = { county: string; countyCode: string };
+type City = { city: string; postalCode: string };
 
 @Component({
   selector: 'app-estate-form',
@@ -37,24 +30,22 @@ type City = {
   styleUrl: './estate-form.component.css'
 })
 export class EstateFormComponent implements OnInit{
-  @ViewChild(UploadFormComponent) uploadComponent!: UploadFormComponent; 
-  
-  counties: County[] = [];
-  cities: City[] = [];
-  files: File[] = [];
-  categories: Category[] = [];
-  addons: Addon[] = [];
+  @ViewChild(UploadFormComponent) uploadComponent!: UploadFormComponent;
 
-  selectedAddons: Addon[] = [];
-  estateForm!: FormGroup;
-  isEditMode = false;
-  estateId: number | null = null;
+  protected InputFormCounties: County[] = [];
+  protected InputFormCities: City[] = [];
+  protected InputFormFiles: File[] = [];
+  protected InputFormCategories: Category[] = [];
+  protected InputFormAddons: Addon[] = [];
+
+  protected estateForm!: FormGroup;
+  protected isEditMode = false;
+  private estateId: number | null = null;
 
   constructor(
     private estateService: EstateService,
     private locationService: LocationService,
     private categoryService: CategoryService,
-    private fileService: FileService,
     private addonService: AddonService,
     private spinner: NgxSpinnerService,
     private route: ActivatedRoute,
@@ -62,311 +53,61 @@ export class EstateFormComponent implements OnInit{
   ) { }
   
   ngOnInit(): void {
-    this.setEstateForm();
-    this.setCountries();
-    this.setAddons();
-    this.setCategories();
-
-    this.route.paramMap.subscribe(params => {
-      this.estateId = params.get('id') == null ? -1 : Number(params.get('id'));
-      if (this.estateId != -1) {
-        this.isEditMode = true;
-        this.loadEstateData();
-      }
-    });
-
-  }
-
-  /**
-   * @description Initializes the estateForm with form controls and validation rules
-  private loadEstateData() {
-    this.estateService.getById(this.estateId!).subscribe(
-      {
-        next: (response: ApiResponse<Estate>) => {
-
-          console.log(response);
-
-          const data = response.data;
-          const locationData = response.data.location;
-
-          const countyData: County = {
-            county: locationData.county,
-            countyCode: locationData.countyCode
-          }
-
-          const cityData: City = {
-            city: locationData.city,
-            postalCode: locationData.postalCode
-          }
-
-          this.setCities(countyData);
-                    
-          const estateForm = {
-            title: data.title,
-            category: data.category,
-            description: data.description,
-            rental: data.rental ? "Affitto" : "Vendita",
-            price: data.price,
-            mtq: data.mtq,
-            energyClass: data.mtq,
-            rooms: data.rooms,
-            services: data.services,
-            county: countyData,
-            city: cityData,
-            street: locationData.street.split(", ")[0],
-            streetNumber: locationData.street.split(", ")[1],
-            addons: data.addons,
-            files: data.files
-          }
-          this.estateForm.patchValue(estateForm);
-        },
-        error: (err) => {
-          console.log('Errore nel caricamento: ' + err.message);
-        },
-        complete: () => {
-          console.log(this.estateForm.value);
-        }
-      }
-    );
+    this.initializeForm();
+    this.loadInitialData();
+    this.checkEditMode();
   }
   
   /**
    * @description Initializes the estateForm with form controls and validation rules.
    */
-  private setEstateForm() {
-    this.estateForm = new FormGroup(
-      {
-        title: new FormControl(null, Validators.required),
-        category: new FormControl(null, Validators.required),
-        description: new FormControl(null, Validators.required),
-        rental: new FormControl(true, Validators.required),
-        price: new FormControl(1, [Validators.required, Validators.min(1)]),
-        mtq: new FormControl(1, [Validators.required, Validators.min(1)]),
-        energyClass: new FormControl('A3', Validators.required),
-        rooms: new FormControl(1, [Validators.required, Validators.min(1)]),
-        services: new FormControl(1, [Validators.required, Validators.min(1)]),
-        county: new FormControl(null, Validators.required),
-        city: new FormControl(null, Validators.required),
-        street: new FormControl(null, Validators.required),
-        streetNumber: new FormControl(null, Validators.required),
-        addons: new FormArray([]),
-        files: new FormArray([]),
-      }
-    )
-  }
-
-  /**
-   * @description Initializes the addons
-   */
-  private setAddons() {
-    this.addonService.getAll().subscribe(
-      {
-        next: (response: ApiResponse<Addon[]>) => {
-          this.addons = response.data;
-        },
-        error: (err) => {
-          console.log('Errore nel caricamento: ' + err.message);
-        }
-      }
-    );
-  }
-
-  /**
-   * @description Initializes the categories
-   */
-  private setCategories() {
-    this.categoryService.getAll().subscribe(
-      {
-        next: (response: ApiResponse<Category[]>) => {
-          this.categories = response.data;
-        },
-        error: (err) => {
-          console.log('Errore nel caricamento: ' + err.message);
-        }
-      }
-    );
-  }
-
-  /**
-   * @description If the form was started in edit mode then it values the fields in the estate form
-   */
-  private loadEstateData() {
-    this.estateService.getById(this.estateId!).subscribe(
-      {
-        next: (response: ApiResponse<Estate>) => {
-          const data = response.data;
-          const locationData = data.location;
-
-          const estateForm  = {
-            title: data.title,
-            category: data.category,
-            description: data.description,
-            rental: data.rental ? "Affitto":  "Vendita",
-            price: data.price,
-            mtq: data.mtq,
-            energyClass: data.energyClass,
-            rooms:data.rooms,
-            services: data.services,
-            county:  locationData.countyCode + '-' + locationData.county,
-            city: locationData.postalCode + '-' + locationData.city,
-            street: locationData.street.split(", ")[0],
-            streetNumber: locationData.street.split(", ")[1],
-          }
-
-          this.estateForm.patchValue(estateForm);
-          
-
-          this.loadAddonsData(data.addons);
-          
-          if (data.files) {
-            this.loadFilesData(data.files);  
-          }
-        },
-        error: (err) => {
-          console.log('Errore nel caricamento: ' + err.message);
-        }
-      }
-    );
-  }
-  
-  /**
-   * @description Values the addons in the estate form  
-   */
-  private loadAddonsData(addons: Addon[]): void {
-    const addonsArray = this.estateForm.get('addons') as FormArray;
-
-    addons.forEach((addon) => {
-      addonsArray.push(new FormControl(addon.name));
+  private initializeForm() {
+    this.estateForm = new FormGroup({
+      title: new FormControl(null, Validators.required),
+      category: new FormControl(null, Validators.required),
+      description: new FormControl(null, Validators.required),
+      rental: new FormControl(true, Validators.required),
+      price: new FormControl(1, [Validators.required, Validators.min(1)]),
+      mtq: new FormControl(1, [Validators.required, Validators.min(1)]),
+      energyClass: new FormControl('A3', Validators.required),
+      rooms: new FormControl(1, [Validators.required, Validators.min(1)]),
+      services: new FormControl(1, [Validators.required, Validators.min(1)]),
+      county: new FormControl(null, Validators.required),
+      city: new FormControl(null, Validators.required),
+      street: new FormControl(null, Validators.required),
+      streetNumber: new FormControl(null, Validators.required),
+      addons: new FormArray([]),
+      files: new FormArray([]),
     });
   }
 
   /**
-   * @description Values the files in the estate form
+   * @description Load Select and Checkbox input
    */
-  private loadFilesData(files: S3File[]): void {
-    const filesArray = this.estateForm.get('files') as FormArray;
-    files.forEach((file) => {
-      filesArray.push(new FormControl(file));
-    });
-  }
-  
-  /**
-   * @description Retrive an estate object from estateForm
-   * @returns Location object
-   */
-  private getEstateData(): Estate {
-      return {
-      id: this.estateId != -1 ? this.estateId : null, 
-      title: this.estateForm.get('title')?.value,
-      category: this.estateForm.get('category')?.value,
-      description: this.estateForm.get('description')?.value,
-      rental: this.estateForm.get('rooms')?.value == 'Affitto' ? true : false,
-      price: this.estateForm.get('price')?.value,
-      mtq: this.estateForm.get('mtq')?.value,
-      energyClass: this.estateForm.get('energyClass')?.value,
-      rooms: this.estateForm.get('rooms')?.value,
-      services: this.estateForm.get('services')?.value,
-      location: this.getLocationData(),
-      userId: 1,
-      addons: this.selectedAddons,
-      files: this.getFileData()
-    };
-  }
+  private loadInitialData(): void {
+    this.addonService.getAll().subscribe(response => this.InputFormAddons = response.data);
+    this.categoryService.getAll().subscribe(response => this.InputFormCategories = response.data);
 
-  /**
-   * @description Retrive a location object from estateForm
-   * @returns Location object
-   */
-  private getLocationData(): Location { 
-    const city = this.estateForm.get('city')?.value.split("-");
-    const county = this.estateForm.get('county')?.value.split("-");
-    
-    return {
-      countyCode: county[0],
-      county: county[1],
-      postalCode: city[0],
-      city: city[1],
-      street: this.estateForm.get('street')?.value + ', ' + this.estateForm.get('streetNumber')?.value
-    };
-  }
-
-  /**
-   * @description Retrive a list of files from uploadComponent
-   */
-  private getFileData(): S3File[] {
-    if (this.uploadComponent) {
-      this.uploadComponent.notify();
-    }
-
-    const savedFile: S3File[] = [];
-    this.files.forEach((file: File) => {  
-      const s3file = {
-        name: file.name,
-        contentType: file.type,
-        size: file.size
-      }
-
-      savedFile.push(s3file)
-    })
-
-    return savedFile;
-  }
-  
-  /**
-   * @description Upload a file on S3
-   * @param file File to be uploaded on S3
-   */
-  private uploadFileOnS3(file: File) {
-    this.fileService.getPresignedUrl(file.name).subscribe(
-      {
-        next: (response: ApiResponse<string>) => {
-          const presignedUrl = response.data;
-          this.fileService.uploadFileToS3(presignedUrl, file).subscribe();
-        },
-        error: (err) => {
-          console.log('Errore nel caricamento: ' + err.message);
-        }
-      }
-    );
-  }
-  
-  /**
-   * @description Bind uploadComponent to this component to retrive file
-   * @param {File} files List of files of uploadComponent
-   */
-   protected retriveFileFromUploader(files: File[]) {
-    this.files = files;
-  }
-
-  /**
-   * @description Fetches a list of counties and populates the counties array.
-   */
-  protected setCountries(): void {
     this.locationService.getCountries().subscribe(
       {
         next: (response: any) => {
-          response.forEach((county: any) => {
-            this.counties.push({
-              county: county.denominazione_provincia,
-              countyCode: county.sigla_provincia
-            })
-          });
-        },
-        error: (err) => {
-          console.error('Errore durante il caricamento delle province:', err.message);
+          this.InputFormCounties = response.map((county: any) => ({
+            county: county.denominazione_provincia,
+            countyCode: county.sigla_provincia
+          }));
         },
         complete: () => {
-          this.setCities(this.counties[0])
+          this.loadCities(this.InputFormCounties[0]);
         }
       });
   }
 
   /**
-   * @description Fetches a list of cities for a given county and populates the cities array.
+   * @description Fetches a list of cities for a given county and populates the InputFormCities.
    * @param {County} county - The county object containing a countyCode used to fetch cities. 
    */
-  protected setCities(county: County): void {
-    this.cities = [];
+  protected loadCities(county: County): void {
+    this.InputFormCities = [];
     this.spinner.show();
     
     
@@ -374,16 +115,9 @@ export class EstateFormComponent implements OnInit{
       {
         next: (response: any) => {
           response.forEach((data: any) => {
-            const city: City = {
-              city: data.denominazione_ita,
-              postalCode: data.cap
-            }
-
-            this.cities.push(city);
+            const city: City = { city: data.denominazione_ita, postalCode: data.cap };
+            this.InputFormCities.push(city);
           });
-        },
-        error: (err) => {
-          console.error('Errore durante il caricamento delle province:', err.message);
         },
         complete: () => {
           setTimeout(() => { this.spinner.hide(); }, 400);
@@ -392,48 +126,161 @@ export class EstateFormComponent implements OnInit{
   }
 
   /**
-   * @description Contact EstateHandle microservices to save the estate data
+   * @description Check whether the form is in edit or new mode.
+   * If it is in edit mode, loads data into the input fields
    */
-  protected saveEstate() : void {
-    this.spinner.show();
-
-    const estate = this.getEstateData();
-
-    this.files.forEach(file => {
-      this.uploadFileOnS3(file);
-    });
+  private checkEditMode(): void {
+    this.route.paramMap.pipe(take(1)).subscribe(params => {
+      this.estateId = params.get('id') ? Number(params.get('id')) : null;
   
-    this.estateService.save(estate).subscribe(
+      if (this.estateId) {
+        this.isEditMode = true;
+        this.loadEstateData(this.estateId);
+      }
+    });
+  }
+  
+
+  /**
+   * @description If the form was started in edit mode then it values the fields in the estate form
+   * @param {number} estateId Estate's id to load
+   */
+  private loadEstateData(estateId: number) : void {
+    this.estateService.getById(estateId).subscribe(
       {
-        error: (err) => {
-          console.log("Errore nel caricamento: " + err.message)
+        next: (response: ApiResponse<Estate>) => {
+          const estate = response.data;
+          
+          this.loadCities({ countyCode: estate.location.countyCode, county: estate.location.county });
+          this.estateForm.patchValue(this.mapEstateToForm(estate));
+
+          const addonsArray = this.estateForm.get('addons') as FormArray;
+          estate.addons.forEach((addon) => { addonsArray.push(new FormControl(addon.name)); });
+          
+          const filesArray = this.estateForm.get('files') as FormArray;
+          estate.files.forEach((file) => { filesArray.push(new FormControl(file)); });
         },
-        complete: () => {
-          this.spinner.hide();
-          this.router.navigate(['/estate']);
+        error: (err) => {
+          console.log('Errore nel caricamento: ' + err.message);
         }
       }
     );
   }
 
-  /** 
-   * @description Method to handle checkbox selection   
-   * @param {Event} event event of checkbox
+  /**
+   * @description Map the estate data in the form data
+   * @param {Estate} estate Estate data
+   * @returns Returns an object that can be put into the form
    */
-  protected onAddonCheckbox(event: Event): void {
-    const checkbox = event.target as HTMLInputElement;
-    const addon: Addon = {
-      name: checkbox.value
-    };
+  private mapEstateToForm(estate: Estate): any {
+    const location = estate.location;
 
-    if (checkbox.checked) {
-      this.selectedAddons.push(addon)
-    } else {
-      const index = this.selectedAddons.findIndex(a => a.name === addon.name);
-      if (index !== -1) {
-        this.selectedAddons.splice(index, 1);
+    return {
+      title: estate.title,
+      category: estate.category.name,
+      description: estate.description,
+      rental: estate.rental ? 'Affitto' : 'Vendita',
+      price: estate.price,
+      mtq: estate.mtq,
+      energyClass: estate.energyClass,
+      rooms: estate.rooms,
+      services: estate.services,
+      county: `${location.countyCode}-${location.county}`,
+      city: `${location.postalCode}-${location.city}`,
+      street: location.street.split(', ')[0],
+      streetNumber: location.street.split(', ')[1],
+    };
+  }
+
+  /**
+   * @description Map the form data in the estate data
+   * @returns {Estate} Estate object
+   */
+  private mapFormToEstate(): Estate {
+    return {
+      id: this.estateId,
+      title: this.estateForm.get('title')?.value,
+      category: this.estateForm.get('category')?.value,
+      description: this.estateForm.get('description')?.value,
+      rental: this.estateForm.get('rental')?.value === 'Affitto',
+      price: this.estateForm.get('price')?.value,
+      mtq: this.estateForm.get('mtq')?.value,
+      energyClass: this.estateForm.get('energyClass')?.value,
+      rooms: this.estateForm.get('rooms')?.value,
+      services: this.estateForm.get('services')?.value,
+      location: this.mapFormToLocation(),
+      userId: 1,
+      addons: this.mapFormToAddons(),
+      files: this.mapUploadComponentToS3File()
+    };
+  }
+
+  /**
+   * @description Map the addons' form section into list of Addon data
+   * @returns {Addon[]} List of Addon object
+   */
+  private mapFormToAddons(): Addon[] {
+    const selectedCheckboxes = document.querySelectorAll<HTMLInputElement>('input[type="checkbox"]:checked');
+    return Array.from(selectedCheckboxes).map(addon => ({ name: addon.value }));
+  }
+
+  /**
+   * @description Map the location's form section in Location data
+   * @returns {Location} Location object
+   */
+  private mapFormToLocation(): Location { 
+    const [postalCode, city] = this.estateForm.get('city')?.value.split('-');
+    const [countyCode, county] = this.estateForm.get('county')?.value.split('-');
+    return { countyCode, county, postalCode, city, street: `${this.estateForm.get('street')?.value}, ${this.estateForm.get('streetNumber')?.value}` };
+
+  }
+
+  /**
+   * @description Map the data form UploadComponent into list of S3File data
+   * @returns {S3File []} List of S3File
+   */
+  private mapUploadComponentToS3File(): S3File[] {
+    this.uploadComponent.notify();
+
+    const savedFile: S3File[] = [];
+    this.InputFormFiles.forEach((file: File) => {  
+      const s3file: S3File = {
+        name: file.name,
+        contentType: file.type,
+        size: file.size
+      };
+
+      savedFile.push(s3file);
+    })
+
+    return savedFile;
+  }
+  
+  /**
+   * @description Bind uploadComponent to this component to retrive file
+   * @param {File} files List of files of uploadComponent
+   */
+   protected bindFormToUploadComponent(files: File[]): void {
+    this.InputFormFiles = files;
+  }
+
+  /**
+   * @description Contact EstateHandle microservices to save the estate data
+   */
+  protected saveEstate() : void {
+    this.spinner.show();
+    const estate = this.mapFormToEstate();
+
+    this.estateService.save(estate).subscribe(
+      {
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide(); 
+            this.router.navigate(['/estate']);
+          }, 600);
+        }
       }
-    }
+    );
   }
 
   /**

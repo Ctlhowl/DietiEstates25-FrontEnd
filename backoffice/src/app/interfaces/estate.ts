@@ -18,5 +18,5 @@ export interface Estate{
     location: Location;
     userId: number;
     addons: Addon[];
-    files?: S3File[];
+    files: S3File[];
 }
