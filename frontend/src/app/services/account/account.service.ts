@@ -23,7 +23,7 @@ export class AccountService {
       return throwError(() => new Error("User non trovato"));
     }
 
-    return this.http.get<ApiResponse<User>>(`${this.apiAccount}/${userId}`); // l'id dell'user dovrà essere concatenato in seguito al login
+    return this.http.get<ApiResponse<User>>(`${this.apiAccount}/${userId}`); 
   }
   
 

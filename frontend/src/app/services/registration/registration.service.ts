@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class RegistrationService {
-  private apiRegistration = `${environment.apiAuth}`;
+  private apiRegistration = `${environment.apiAccount}/register`;
 
   constructor(private http: HttpClient) { }
   
@@ -25,6 +25,6 @@ export class RegistrationService {
 
 
   register(userData: User): Observable<ApiResponse<User>> {
-    return this.http.post<ApiResponse<User>>(`${this.apiRegistration}/register`, userData);
+    return this.http.post<ApiResponse<User>>(`${this.apiRegistration}`, userData);
   }
 }

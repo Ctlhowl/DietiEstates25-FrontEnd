@@ -60,6 +60,9 @@ export class LoginService {
     if (decodedToken) {
       localStorage.setItem('userId', decodedToken.id); 
       localStorage.setItem('userRole', decodedToken.role);
+      if (this.getUserRole() === 'ROLE_MANAGER' || this.getUserRole() === 'ROLE_ADMIN'){
+        localStorage.setItem('userAgency',decodedToken.agency);
+      }
     } 
   }
 
@@ -73,6 +76,10 @@ export class LoginService {
 
   getUserRole(): string | null {
     return localStorage.getItem('userRole');
+  }
+
+  getUserAgency(): string | null {
+    return localStorage.getItem('userAgency');
   }
 
   decodeToken(token: string): any {
