@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { LoginService } from '../../services/login/login.service';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-login',
@@ -14,15 +16,13 @@ export class LoginComponent implements OnInit {
   password: string = '';
   errorMessage: string = '';
 
-  constructor(private loginService: LoginService) {}
+  constructor(private loginService: LoginService,private router: Router) {}
 
   ngOnInit(): void {
     this.loginService.initGoogleLogin();
   }
 
   login() {
-    console.log(this.email);
-    console.log(this.password);
     this.loginService.login({ email: this.email, password: this.password }).subscribe({
       next: (response) => {
         this.loginService.saveToken(response.data.token);
@@ -34,5 +34,9 @@ export class LoginComponent implements OnInit {
       }
     });
   }
+
+  /*goToRegistration(){
+    this.authService.switchToRegister();
+  }*/
 
 }
