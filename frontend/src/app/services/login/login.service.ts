@@ -35,7 +35,7 @@ export class LoginService {
     this.sendTokenToBackend(token);
   }
 
-  // Invia il token al backend
+
   private sendTokenToBackend(token: string): void {
     this.http.post<ApiResponse<{token: string}>>(this.apiLogin + '/google', { token })
       .subscribe({

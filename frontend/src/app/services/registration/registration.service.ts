@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environments';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { ApiResponse } from '../../serialization/apiResponse';
 import { User } from '../../interfaces/user';
 import { Observable } from 'rxjs';
@@ -9,10 +9,10 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class RegistrationService {
-  private apiRegistration = `${environment.apiAccount}/register`;
+  private apiRegistration = `${environment.apiBackoffice}`;
 
   constructor(private http: HttpClient) { }
-  
+
   getAvailableRoles(): string[] {
     const role = localStorage.getItem("userRole");
     if (role === 'ROLE_ADMIN') {
@@ -25,6 +25,9 @@ export class RegistrationService {
 
 
   register(userData: User): Observable<ApiResponse<User>> {
-    return this.http.post<ApiResponse<User>>(`${this.apiRegistration}`, userData);
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+    });
+    return this.http.post<ApiResponse<User>>(`${this.apiRegistration}`, userData ,{ headers });
   }
 }

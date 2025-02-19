@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiResponse } from '../../serialization/apiResponse';
 import { User } from '../../interfaces/user';
@@ -23,11 +23,18 @@ export class AccountService {
       return throwError(() => new Error("User non trovato"));
     }
 
-    return this.http.get<ApiResponse<User>>(`${this.apiAccount}/${userId}`); 
+    const headers = new HttpHeaders({
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+    });
+
+    return this.http.get<ApiResponse<User>>(`${this.apiAccount}/${userId}`,{headers}); 
   }
   
 
   updateUser(updatedUser: User): Observable<ApiResponse<User>> {
-    return this.http.put<ApiResponse<User>>(`${this.apiAccount}`,updatedUser);
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+    });
+    return this.http.put<ApiResponse<User>>(`${this.apiAccount}`,updatedUser,{headers});
   }
 }

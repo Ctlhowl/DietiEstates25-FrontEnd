@@ -1,0 +1,22 @@
+<div *ngIf="isLoading">Caricamento...</div>
+<div *ngIf="errorMessage">{{ errorMessage }}</div>
+
+<table *ngIf="!isLoading && !errorMessage" border="5">
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Cognome</th>
+      <th>Email</th>
+      <th>Ruolo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let employee of users">
+      <td>{{ employee.name }}</td>
+      <td>{{ employee.surname }}</td>
+      <td>{{ employee.email }}</td>
+      <td>{{ employee.role }}</td>
+    </tr>
+  </tbody>
+</table>
+
