@@ -1,19 +1,18 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private isRegistering = new BehaviorSubject<boolean>(false);
-  isRegistering$ = this.isRegistering.asObservable();
+  constructor() {}
 
-  switchToRegister() {
-    this.isRegistering.next(true);
+  isAuthenticated(): boolean {
+    const token = localStorage.getItem('authToken'); 
+    return !!token; 
   }
 
-  switchToLogin() {
-    this.isRegistering.next(false);
+  logout() {
+    localStorage.clear;
   }
 }

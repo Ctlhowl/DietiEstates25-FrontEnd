@@ -1,12 +1,13 @@
 import { IMAGE_CONFIG } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
+import { AuthService } from '../../services/auth/auth.service';
 
 type NavItem = {
   routeLink: string,
   icon: string,
   label: string,
-  role: string
+  role: string | null
 };
 
 @Component({
@@ -28,37 +29,52 @@ type NavItem = {
 export class SidenavComponent implements OnInit{
   navDataEmployee: NavItem[] = [];
   navDataAdmin: NavItem[] = [];
-  userRole: string = 'employee';
+  userRole: string | null = localStorage.getItem('userRole');
+
+  constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.navDataEmployee = [
-      {
-        routeLink: '/',
-        icon: 'person',
-        label: 'Account',
-        role: 'employee',
-      },
-      {
-        routeLink: '/',
-        icon: 'home',
-        label: 'Inserzioni',
-        role: 'employee',
-      },
-      {
-        routeLink: '/',
-        icon: 'logout',
-        label: 'Logout',
-        role: 'employee',
-      }
-    ];
+    if (this.userRole === 'ROLE_ADMIN' || this.userRole === 'ROLE_MANAGER'){
+      this.navDataEmployee = [
+        {
+          routeLink: '/',
+          icon: 'person',
+          label: 'Account',
+          role: this.userRole,
+        },
+        {
+          routeLink: '/',
+          icon: 'home',
+          label: 'Inserzioni',
+          role: this.userRole,
+        },
+        {
+          routeLink: '/',
+          icon: 'deployed_code_account',
+          label: 'Gestione Immobiliare',
+          role: this.userRole,
+        }
+      ];
+    }else{
+      this.navDataEmployee = [
+        {
+          routeLink: '/',
+          icon: 'person',
+          label: 'Account',
+          role: this.userRole,
+        },
+        {
+          routeLink: '/',
+          icon: 'home',
+          label: 'Inserzioni',
+          role: this.userRole,
+        }
+      ]
+    }
+    
+  }
 
-    this.navDataAdmin = [
-      {
-        routeLink: '/',
-        icon: 'deployed_code_account',
-        label: 'Gestione Immobiliare',
-        role: 'admin',
-      }
-    ]
+  onLogout(event: Event) {
+    this.authService.logout();
   }
 }

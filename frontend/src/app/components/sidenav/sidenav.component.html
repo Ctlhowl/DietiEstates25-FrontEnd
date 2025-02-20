@@ -26,5 +26,12 @@
                     <span class="description">{{item.label}}</span>    
                 </a>
         }
+
+        <a [routerLink]="['']"  class="nav-link" (click)="onLogout($event)">
+            <span class="icon"> 
+                <span class="material-symbols-outlined">logout</span>
+            </span>
+            <span class="description">Logout</span>    
+        </a>
     </nav>
 </div>
