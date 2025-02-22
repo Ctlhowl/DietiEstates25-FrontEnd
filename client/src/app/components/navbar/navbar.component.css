@@ -1,0 +1,102 @@
+.material-symbols-outlined {
+    font-size: 32px;
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 0,
+    'GRAD' 200,
+    'opsz' 48;
+}
+
+.sidebar{
+    width: auto;
+    align-items: center;
+    background-color: #fff;
+    transition: width 0.3s;
+
+    border-bottom: 1px solid;
+}
+
+.sidebar .nav-link{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 0px 20px;
+    color: #0d1b2a;
+}
+
+
+.sidebar-logo{
+    align-items: center;
+    padding: 20px;
+    height: 200px;
+    justify-content: center;
+}
+
+.sidebar-logo .text{
+    color: #0d1b2a;
+    margin: 20px 0;
+    font-size: 24px;
+}
+
+.sidebar-logo .logo{
+    width:75px;
+    height: 75px;
+}
+
+.custom-line {
+    border: none;
+    height: 2px;
+    background-color: #000;
+    margin: 20px 0;
+}
+
+.sidebar .description {
+    font-size: 18px;
+}
+
+.sidebar .nav-link:hover {
+    color: #0077b6;
+}
+
+.sidebar-footer{
+    margin-top: auto;
+}
+
+@media (max-width: 650px) {
+    .sidebar {
+        width: 65px;
+        min-height: 100vh;
+        height: 100%;
+    }
+
+    .sidebar .nav-link{
+        margin-top: 55px;
+        justify-content: center;
+    }
+
+    .sidebar .description {
+        display: none;
+    } 
+
+    .sidebar-logo .text{
+        display: none;
+    }
+    
+    .sidebar-logo{
+        justify-content: center;
+        height: 25px;
+    }
+
+    .sidebar-logo .logo{
+        justify-content: center;
+        width:32px;
+        height: 32px;
+    }
+
+    .sidebar .nav-link:hover {
+        background-color: #0077b6;
+        color: #fff;
+        width: 65px;
+    }
+}
