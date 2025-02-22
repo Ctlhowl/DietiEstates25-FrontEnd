@@ -7,19 +7,16 @@ import { Location } from '../../../interfaces/location';
 import { EstateService } from '../../../services/estate/estate.service';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { S3File } from '../../../interfaces/s3File';
-import { FileService } from '../../../services/file/file.service';
 import { ApiResponse } from '../../../serialization/apiResponse';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AddonService } from '../../../services/addon/addon.service';
+import { Addon } from '../../../interfaces/addon';
+import { CategoryService } from '../../../services/category/category.service';
+import { Category } from '../../../interfaces/category';
+import { take } from 'rxjs';
 
-
-type County = {
-  county: string,
-  countyCode: string
-};
-
-type City = {
-  city: string
-  postalCode: string
-}
+type County = { county: string; countyCode: string };
+type City = { city: string; postalCode: string };
 
 @Component({
   selector: 'app-estate-form',
@@ -33,125 +30,135 @@ type City = {
   styleUrl: './estate-form.component.css'
 })
 export class EstateFormComponent implements OnInit{
-  counties: County[] = [];
-  cities: City[] = [];
-  files: File[] = [];
+  @ViewChild(UploadFormComponent) uploadComponent!: UploadFormComponent;
 
-  @ViewChild(UploadFormComponent) uploadComponent!: UploadFormComponent; 
+  protected InputFormCounties: County[] = [];
+  protected InputFormCities: City[] = [];
+  protected InputFormFiles: File[] = [];
+  protected InputFormCategories: Category[] = [];
+  protected InputFormAddons: Addon[] = [];
 
-  estateForm!: FormGroup;
+  protected estateForm!: FormGroup;
+  protected isEditMode = false;
+  private estateId: number | null = null;
 
   constructor(
-    private locationService: LocationService,
     private estateService: EstateService,
-    private fileService: FileService,
+    private locationService: LocationService,
+    private categoryService: CategoryService,
+    private addonService: AddonService,
     private spinner: NgxSpinnerService,
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
   
   ngOnInit(): void {
-    this.setCountries();
-    this.setEstateForm();
+    this.initializeForm();
+    this.loadInitialData();
+    this.checkEditMode();
   }
-
   
   /**
    * @description Initializes the estateForm with form controls and validation rules.
    */
-  private setEstateForm() {
-    this.estateForm = new FormGroup(
+  private initializeForm() {
+    this.estateForm = new FormGroup({
+      title: new FormControl(null, Validators.required),
+      category: new FormControl(null, Validators.required),
+      description: new FormControl(null, Validators.required),
+      rental: new FormControl(true, Validators.required),
+      price: new FormControl(1, [Validators.required, Validators.min(1)]),
+      mtq: new FormControl(1, [Validators.required, Validators.min(1)]),
+      energyClass: new FormControl('A3', Validators.required),
+      rooms: new FormControl(1, [Validators.required, Validators.min(1)]),
+      services: new FormControl(1, [Validators.required, Validators.min(1)]),
+      county: new FormControl(null, Validators.required),
+      city: new FormControl(null, Validators.required),
+      street: new FormControl(null, Validators.required),
+      streetNumber: new FormControl(null, Validators.required),
+      addons: new FormArray([]),
+      files: new FormArray([]),
+    });
+  }
+
+  /**
+   * @description Load Select and Checkbox input
+   */
+  private loadInitialData(): void {
+    this.addonService.getAll().subscribe(response => this.InputFormAddons = response.data);
+    this.categoryService.getAll().subscribe(response => this.InputFormCategories = response.data);
+
+    this.locationService.getCountries().subscribe(
       {
-        title: new FormControl(null, Validators.required),
-        category: new FormControl(null, Validators.required),
-        description: new FormControl(null, Validators.required),
-        rental: new FormControl(true, Validators.required),
-        price: new FormControl(1, [Validators.required, Validators.min(1)]),
-        mtq: new FormControl(1, [Validators.required, Validators.min(1)]),
-        energyClass: new FormControl('A3', Validators.required),
-        rooms: new FormControl(1, [Validators.required, Validators.min(1)]),
-        services: new FormControl(1, [Validators.required, Validators.min(1)]),
-        county: new FormControl(null, Validators.required),
-        city: new FormControl(null, Validators.required),
-        street: new FormControl(null, Validators.required),
-        streetNumber: new FormControl(null, Validators.required),
-        addons: new FormArray([]),
+        next: (response: any) => {
+          this.InputFormCounties = response.map((county: any) => ({
+            county: county.denominazione_provincia,
+            countyCode: county.sigla_provincia
+          }));
+        },
+        complete: () => {
+          this.loadCities(this.InputFormCounties[0]);
+        }
+      });
+  }
+
+  /**
+   * @description Fetches a list of cities for a given county and populates the InputFormCities.
+   * @param {County} county - The county object containing a countyCode used to fetch cities. 
+   */
+  protected loadCities(county: County): void {
+    this.InputFormCities = [];
+    this.spinner.show();
+    
+    
+    this.locationService.getCities(county.countyCode).subscribe(
+      {
+        next: (response: any) => {
+          response.forEach((data: any) => {
+            const city: City = { city: data.denominazione_ita, postalCode: data.cap };
+            this.InputFormCities.push(city);
+          });
+        },
+        complete: () => {
+          setTimeout(() => { this.spinner.hide(); }, 400);
+        }
+      });
+  }
+
+  /**
+   * @description Check whether the form is in edit or new mode.
+   * If it is in edit mode, loads data into the input fields
+   */
+  private checkEditMode(): void {
+    this.route.paramMap.pipe(take(1)).subscribe(params => {
+      this.estateId = params.get('id') ? Number(params.get('id')) : null;
+  
+      if (this.estateId) {
+        this.isEditMode = true;
+        this.loadEstateData(this.estateId);
       }
-    )
-  }
-
-  /**
-   * @description Retrive an estate object from estateForm
-   * @returns Location object
-   */
-  private getEstateData(): Estate {
-    const rental = this.estateForm.get('rooms')?.value == 'Affitto' ? true : false;
-    const location = this.getLocationData();
-
-    return {
-      title: this.estateForm.get('title')?.value,
-      category: this.estateForm.get('category')?.value,
-      description: this.estateForm.get('description')?.value,
-      rental: rental,
-      price: this.estateForm.get('price')?.value,
-      mtq: this.estateForm.get('mtq')?.value,
-      energyClass: this.estateForm.get('energyClass')?.value,
-      rooms: this.estateForm.get('rooms')?.value,
-      services: this.estateForm.get('services')?.value,
-      location: location,
-      userId: 1,
-      addons: this.addons.controls.map(control => control.value),
-      files: this.getFileData()
-    };
-  }
-
-  /**
-   * @description Retrive a location object from estateForm
-   * @returns Location object
-   */
-  private getLocationData(): Location {
-    const street = this.estateForm.get('street')?.value + ' ' + this.estateForm.get('streetNumber')?.value 
-    const postalCode = this.estateForm.get('city')?.value.postalCode;
-    const city = this.estateForm.get('city')?.value.city;
-
-    return {
-      county: this.estateForm.get('county')?.value,
-      city: city,
-      postalCode: postalCode,
-      street: street
-    };
-  }
-
-  /**
-   * @description Retrive a list of files from uploadComponent
-   */
-  private getFileData(): S3File[] {
-    if (this.uploadComponent) {
-      this.uploadComponent.getFiles();
-    }
-
-    const savedFile: S3File[] = [];
-    this.files.forEach((file: File) => {  
-      const s3file = {
-        name: file.name,
-        contentType: file.type,
-        size: file.size
-      }
-
-      savedFile.push(s3file)
-    })
-
-    return savedFile;
+    });
   }
   
+
   /**
-   * Upload a file on S3
-   * @param file File to be uploaded on S3
+   * @description If the form was started in edit mode then it values the fields in the estate form
+   * @param {number} estateId Estate's id to load
    */
-  private uploadFileOnS3(file: File) {
-    this.fileService.getPresignedUrl(file.name).subscribe(
+  private loadEstateData(estateId: number) : void {
+    this.estateService.getById(estateId).subscribe(
       {
-        next: (response: ApiResponse<string>) => {
-          const presignedUrl = response.data;
-          this.fileService.uploadFileToS3(presignedUrl, file).subscribe();
+        next: (response: ApiResponse<Estate>) => {
+          const estate = response.data;
+          
+          this.loadCities({ countyCode: estate.location.countyCode, county: estate.location.county });
+          this.estateForm.patchValue(this.mapEstateToForm(estate));
+
+          const addonsArray = this.estateForm.get('addons') as FormArray;
+          estate.addons.forEach((addon) => { addonsArray.push(new FormControl(addon.name)); });
+          
+          const filesArray = this.estateForm.get('files') as FormArray;
+          estate.files.forEach((file) => { filesArray.push(new FormControl(file)); });
         },
         error: (err) => {
           console.log('Errore nel caricamento: ' + err.message);
@@ -159,115 +166,129 @@ export class EstateFormComponent implements OnInit{
       }
     );
   }
+
+  /**
+   * @description Map the estate data in the form data
+   * @param {Estate} estate Estate data
+   * @returns Returns an object that can be put into the form
+   */
+  private mapEstateToForm(estate: Estate): any {
+    const location = estate.location;
+
+    return {
+      title: estate.title,
+      category: estate.category.name,
+      description: estate.description,
+      rental: estate.rental ? 'Affitto' : 'Vendita',
+      price: estate.price,
+      mtq: estate.mtq,
+      energyClass: estate.energyClass,
+      rooms: estate.rooms,
+      services: estate.services,
+      county: `${location.countyCode}-${location.county}`,
+      city: `${location.postalCode}-${location.city}`,
+      street: location.street.split(', ')[0],
+      streetNumber: location.street.split(', ')[1],
+    };
+  }
+
+  /**
+   * @description Map the form data in the estate data
+   * @returns {Estate} Estate object
+   */
+  private mapFormToEstate(): Estate {
+    return {
+      id: this.estateId,
+      title: this.estateForm.get('title')?.value,
+      category: this.estateForm.get('category')?.value,
+      description: this.estateForm.get('description')?.value,
+      rental: this.estateForm.get('rental')?.value === 'Affitto',
+      price: this.estateForm.get('price')?.value,
+      mtq: this.estateForm.get('mtq')?.value,
+      energyClass: this.estateForm.get('energyClass')?.value,
+      rooms: this.estateForm.get('rooms')?.value,
+      services: this.estateForm.get('services')?.value,
+      location: this.mapFormToLocation(),
+      userId: 1,
+      addons: this.mapFormToAddons(),
+      files: this.mapUploadComponentToS3File()
+    };
+  }
+
+  /**
+   * @description Map the addons' form section into list of Addon data
+   * @returns {Addon[]} List of Addon object
+   */
+  private mapFormToAddons(): Addon[] {
+    const selectedCheckboxes = document.querySelectorAll<HTMLInputElement>('input[type="checkbox"]:checked');
+    return Array.from(selectedCheckboxes).map(addon => ({ name: addon.value }));
+  }
+
+  /**
+   * @description Map the location's form section in Location data
+   * @returns {Location} Location object
+   */
+  private mapFormToLocation(): Location { 
+    const [postalCode, city] = this.estateForm.get('city')?.value.split('-');
+    const [countyCode, county] = this.estateForm.get('county')?.value.split('-');
+    return { countyCode, county, postalCode, city, street: `${this.estateForm.get('street')?.value}, ${this.estateForm.get('streetNumber')?.value}` };
+
+  }
+
+  /**
+   * @description Map the data form UploadComponent into list of S3File data
+   * @returns {S3File []} List of S3File
+   */
+  private mapUploadComponentToS3File(): S3File[] {
+    this.uploadComponent.notify();
+
+    const savedFile: S3File[] = [];
+    this.InputFormFiles.forEach((file: File) => {  
+      const s3file: S3File = {
+        name: file.name,
+        contentType: file.type,
+        size: file.size
+      };
+
+      savedFile.push(s3file);
+    })
+
+    return savedFile;
+  }
   
   /**
-   * Bind uploadComponent to this component to retrive file
-   * @param files List of files of uploadComponent
+   * @description Bind uploadComponent to this component to retrive file
+   * @param {File} files List of files of uploadComponent
    */
-   protected retriveFileFromUploader(files: File[]) {
-    this.files = files;
-  }
-
-  /** 
-   * @description Getter to access the FormArray 
-   * 
-  */
-  private get addons(): FormArray {
-    return this.estateForm.get('addons') as FormArray;
-  }
-
-  /**
-   * @description Fetches a list of counties and populates the counties array.
-   */
-  protected setCountries(): void {
-    this.locationService.getCountries().subscribe(
-      {
-        next: (response: any) => {
-          response.forEach((county: any) => {
-            this.counties.push({
-              county: county.denominazione_provincia,
-              countyCode: county.sigla_provincia
-            })
-          });
-        },
-        error: (err) => {
-          console.error('Errore durante il caricamento delle province:', err);
-        },
-        complete: () => {
-          this.setCities(this.counties[0])
-        }
-      });
-  }
-
-  /**
-   * @description Fetches a list of cities for a given county and populates the cities array.
-   * 
-   * @param {County} county - The county object containing a countyCode used to fetch cities. 
-   */
-  protected setCities(county: County): void{
-    this.cities = [];
-    this.spinner.show();
-    
-    
-    this.locationService.getCities(county.countyCode).subscribe(
-      {
-        next: (response: any) => {
-          response.forEach((city: any) => {
-            this.cities.push({
-              city: city.denominazione_ita,
-              postalCode: city.cap
-            })
-          });
-        },
-        error: (err) => {
-          console.error('Errore durante il caricamento delle province:', err);
-        },
-        complete: () => {
-          setTimeout(() => {
-            this.spinner.hide();
-          },400);
-        }
-      });
-  }
-
-  
-
-  /** 
-   * @description Method to handle checkbox selection 
-  * */
-  protected onCheckboxChange(event: Event) {
-    const checkbox = event.target as HTMLInputElement;
-    const addonsArray = this.addons;
-    const value = checkbox.value;
-
-    if (checkbox.checked) {
-      addonsArray.push(new FormControl(value)); 
-    } else {
-      const index = addonsArray.controls.findIndex(control => control.value === value);
-      if (index !== -1) {
-        addonsArray.removeAt(index);
-      }
-    }
+   protected bindFormToUploadComponent(files: File[]): void {
+    this.InputFormFiles = files;
   }
 
   /**
    * @description Contact EstateHandle microservices to save the estate data
    */
-  protected saveEstate() {
+  protected saveEstate() : void {
     this.spinner.show();
+    const estate = this.mapFormToEstate();
 
-    const estate = this.getEstateData();
-
-    this.files.forEach(file => {
-      this.uploadFileOnS3(file);
-    });
-
-    this.estateService.saveEstate(estate).subscribe(
+    this.estateService.save(estate).subscribe(
       {
         complete: () => {
-          this.spinner.hide();
+          setTimeout(() => {
+            this.spinner.hide(); 
+            this.router.navigate(['/estate']);
+          }, 600);
         }
       }
     );
+  }
+
+  /**
+   * @description Select checkbox that contains addon's estate 
+   * @param {string} addonName name of addon 
+   * @returns {boolean} true if addon is present, false otherwise 
+   */
+  protected isAddonSelected(addonName: string): boolean {
+    return this.estateForm.get('addons')?.value.includes(addonName);
   }
 }

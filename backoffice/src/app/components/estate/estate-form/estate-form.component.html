@@ -7,7 +7,11 @@
 <div class="container p-5">
     <div class="row text-center ">
         <div class="col">
-            <h2>Aggiungi Inserzione</h2>        
+            @if (isEditMode) {
+                <h3>Modifica Inserzione</h3>    
+            }@else {
+                <h3>Aggiungi Inserzione</h3>
+            }
         </div>
     </div>
     <hr class="custom-line-bold">
@@ -22,7 +26,9 @@
             <div class="col-sm-2 mb-3">
                 <label for="category" class="form-label">Categoria</label>
                 <select class="form-select"id="category" formControlName="category">
-                    <option value="Appartamento" selected>Appartamento</option>
+                    @for (item of InputFormCategories; track $index) {
+                        <option [ngValue]="item.name">{{item.name}}</option>
+                    }
                 </select>
             </div>
             <div class="col-sm-2 mb-3">
@@ -53,16 +59,16 @@
             <div class="col-sm mb-3">
                 <label for="county" class="form-label">Provincia</label>
                 <select class="form-select"id="county" formControlName="county" required>
-                    @for (item of counties; track $index) {
-                        <option [ngValue]="item.county" (click)="setCities(item)"> {{item.countyCode}} - {{item.county}}</option>
-                    }
+                    @for (item of InputFormCounties; track $index) {
+                        <option [ngValue]="item.countyCode + '-' + item.county" (click)="loadCities(item)">{{item.countyCode}} - {{item.county}}</option>
+                    } 
                 </select>
             </div>
             <div class="col-sm mb-3">                
                     <label for="city" class="form-label">Comune</label>
                     <select class="form-select" id="city" formControlName="city" required>
-                        @for (item of cities; track $index) {
-                            <option [ngValue]="item">{{item.postalCode}} - {{item.city}}</option>
+                        @for (item of InputFormCities; track $index) {
+                            <option [ngValue]="item.postalCode + '-' + item.city">{{item.postalCode}} - {{item.city}}</option>
                         }
                     </select>
             </div>
@@ -86,17 +92,17 @@
     
             <div class="col-sm-3 mb-3">
                 <label for="mtq" class="form-label">Mtq</label>
-                <input type="number" step="0.01" min="0.00" class="form-control" id="mtq" formControlName="mtq" required>
+                <input type="number" step="1" min="1" class="form-control" id="mtq" formControlName="mtq" required>
             </div>
     
             <div class="col-sm-3 mb-3">
                 <label for="rooms" class="form-label">N. Stanze</label>
-                <input type="number" step="0.01" min="0.00" class="form-control" id="rooms" formControlName="rooms" required>
+                <input type="number" step="1" min="1" class="form-control" id="rooms" formControlName="rooms" required>
             </div>
     
             <div class="col-sm-3 mb-3">
                 <label for="services" class="form-label">N. Servizi</label>
-                <input type="number" step="0.01" min="0.00" class="form-control" id="services" formControlName="services" required>
+                <input type="number" step="1" min="1" class="form-control" id="services" formControlName="services" required>
             </div>
     
             <div class="col-sm-3 mb-3">
@@ -110,8 +116,8 @@
                     <option value="D">D</option>
                     <option value="E">E</option>
                     <option value="F">F</option>
-                    </select>
-                </div>
+                </select>
+            </div>
         </div>
     
         <!-- CARATTERISTICHE AGGIUNTIVE -->
@@ -119,20 +125,10 @@
             <hr class="custom-line">
             <h4 class="mb-3">Caratteristiche Aggiuntive</h4>
                 <div class="col-sm mb-3">
-                    <input type="checkbox" class="btn-check" id="btn-check-1" value="Garage" (change)="onCheckboxChange($event)">
-                    <label  style="width: 200px;" class="btn btn-outline-secondary m-1" for="btn-check-1">Garage</label>
-                
-                    <input type="checkbox" class="btn-check" id="btn-check-2" value="Piscina" (change)="onCheckboxChange($event)">
-                    <label style="width: 200px;" class="btn btn-outline-secondary m-1" for="btn-check-2">Piscina</label>
-                
-                    <input type="checkbox" class="btn-check" id="btn-check-3" value="Ascensore" (change)="onCheckboxChange($event)">
-                    <label style="width: 200px;" class="btn btn-outline-secondary m-1" for="btn-check-3">Ascensore</label>
-                
-                    <input type="checkbox" class="btn-check" id="btn-check-4" value="Portineria" (change)="onCheckboxChange($event)">
-                    <label style="width: 200px;" class="btn btn-outline-secondary m-1" for="btn-check-4">Portineria</label>
-                
-                    <input type="checkbox" class="btn-check" id="btn-check-5" value="Giardino" (change)="onCheckboxChange($event)">
-                    <label style="width: 200px;" class="btn btn-outline-secondary m-1" for="btn-check-5">Giardino</label>
+                    @for (addon of InputFormAddons; track $index) {
+                        <input type="checkbox" class="btn-check" [id]="'btn-check-' + addon.name" [value]="addon.name" [checked]="isAddonSelected(addon.name)">
+                        <label  style="width: 200px;" class="btn btn-outline-secondary m-1" [for]="'btn-check-' + addon.name">{{addon.name}}</label>
+                    }
               </div>
         </div>
     
@@ -140,7 +136,7 @@
         <div class="row m-3">
             <hr class="custom-line">
             <h4 class="mb-3">Foto</h4>
-                <app-upload-form (filesData)="retriveFileFromUploader($event)"></app-upload-form>
+                <app-upload-form [filesEdit]="estateForm.get('files')?.value" (filesData)="bindFormToUploadComponent($event)"></app-upload-form>
         </div> 
         <hr class="custom-line-bold">
         <div class="text-center">

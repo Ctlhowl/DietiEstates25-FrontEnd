@@ -1,18 +1,35 @@
 <div class="row">
     <div class="col">
          <h5>File Caricati</h5>
-         @if(files.length > 0){
+         @if(filesEdit.length > 0){
             <ul>
-                @for(file of files; track $index){
+                @for(file of filesEdit; track $index){
                     <li>
                         {{ file.name }} ({{ file.size / 1000 }} KB) 
-                        <button (click)="removeFile($index)" type="button" class="btn">
+                        <button (click)="removeFile($index, file.name)" type="button" class="btn">
                             <span class="material-symbols-outlined">delete_forever</span>
                         </button>
                     </li>
                 }
             </ul>
          }
+         
+         @if (files.length > 0){
+            <ul>
+                @for(file of files; track $index){
+                    <li>
+                        {{ file.name }} ({{ file.size / 1000 }} KB) 
+                        <button (click)="removeFile($index, file.name)" type="button" class="btn">
+                            <span class="material-symbols-outlined">delete_forever</span>
+                        </button>
+                    </li>
+                }
+            </ul>
+        }
+        
+        @if(files.length == 0 && filesEdit.length == 0){
+            <p>Nessun file presente</p>
+        }
     </div>
 
     <div class="col">

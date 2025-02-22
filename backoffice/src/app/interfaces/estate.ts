@@ -1,12 +1,13 @@
 import { Location } from "./location";
-import { Addons } from "./addons";
+import { Addon } from "./addon";
 import { S3File } from "./s3File";
+import { Category } from "./category";
  
 
 export interface Estate{
-    id?: number;
+    id: number | null;
     title: string;
-    category: string;
+    category: Category;
     description: string;
     rental: boolean;
     price: number;
@@ -16,6 +17,6 @@ export interface Estate{
     services: number;
     location: Location;
     userId: number;
-    addons: Addons[];
-    files?: S3File[];
+    addons: Addon[];
+    files: S3File[];
 }
