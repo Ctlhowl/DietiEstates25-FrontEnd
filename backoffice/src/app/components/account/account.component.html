@@ -1,0 +1,13 @@
+<form>
+    <label>Nome:</label>
+    <input type="text" [(ngModel)]="user.name" name="name" (ngModelChange)="checkForChanges()">
+    
+    <label>Cognome:</label>
+    <input type="text" [(ngModel)]="user.surname" name="surname" (ngModelChange)="checkForChanges()">
+    
+    <label>Email:</label>
+    <input type="email" [(ngModel)]="user.email" name="email" (ngModelChange)="checkForChanges()">
+  
+    <button (click)="updateUserInfo()" [disabled]="!isModified">Modifica</button>
+</form>
+  
