@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RegistrationService } from '../../services/registration/registration.service';
 import { FormBuilder, FormGroup, Validators,ReactiveFormsModule,FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { User } from '../../interfaces/user';
 
 @Component({
   selector: 'app-registration',
@@ -36,6 +37,7 @@ export class RegistrationComponent implements OnInit {
         surname: this.registerForm.get('surname')?.value,
         email: this.registerForm.get('email')?.value,
         password: this.registerForm.get('password')?.value,
+        agency : localStorage.getItem('userAgency'),
         role: this.registerForm.get('role')?.value
       };
 

@@ -28,6 +28,8 @@ export class LoginComponent implements OnInit {
         this.loginService.saveToken(response.data.token);
         console.log('UserID:', this.loginService.getUserId());
         console.log('UserRole:', this.loginService.getUserRole());
+
+        this.router.navigate(['/list']);
       },
       error: () => {
         this.errorMessage = 'Credenziali non valide';
@@ -36,7 +38,7 @@ export class LoginComponent implements OnInit {
   }
 
   /*goToRegistration(){
-    this.authService.switchToRegister();
+    this.router.navigate(['/registration']);
   }*/
 
 }
