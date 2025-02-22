@@ -4,7 +4,6 @@ import { LoginService } from '../../services/login/login.service';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
-
 @Component({
   selector: 'app-login',
   imports: [FormsModule,CommonModule],
@@ -19,7 +18,7 @@ export class LoginComponent implements OnInit {
   constructor(private loginService: LoginService,private router: Router) {}
 
   ngOnInit(): void {
-    this.loginService.initGoogleLogin();
+    this.renderButton(this.loginService.initGoogleLogin());
   }
 
   login() {
@@ -35,6 +34,13 @@ export class LoginComponent implements OnInit {
         this.errorMessage = 'Credenziali non valide';
       }
     });
+  }
+
+  private renderButton(google: any): void{
+    google.accounts.id.renderButton(
+      document.getElementById("buttonDiv"),
+      { size: "large", shape: "pill" }  // customization attributes
+    );
   }
 
   /*goToRegistration(){
