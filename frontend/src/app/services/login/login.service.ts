@@ -15,15 +15,13 @@ export class LoginService {
 
   constructor(private http: HttpClient) {}
 
-  public initGoogleLogin(): void {
+  public initGoogleLogin(): any {
     google.accounts.id.initialize({
       client_id: this.clientId,
       callback: (response: any) => this.handleGoogleSignIn(response)
     });
-    google.accounts.id.renderButton(
-      document.getElementById("buttonDiv"),
-      { size: "large", shape: "pill" }  // customization attributes
-    );
+
+    return google;
   }
 
   // Gestisce la risposta del login
