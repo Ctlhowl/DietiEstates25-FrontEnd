@@ -1,0 +1,36 @@
+<h2>Registrazione</h2>
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <label for="name">Nome</label>
+  <input id="name" formControlName="name" type="text">
+  <div *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched">
+    Il nome è obbligatorio
+  </div>
+
+  <label for="surname">Cognome</label>
+  <input id="surname" formControlName="surname" type="text">
+  <div *ngIf="registerForm.get('surname')?.invalid && registerForm.get('surname')?.touched">
+    Il cognome è obbligatorio
+  </div>
+
+  <label for="email">Email</label>
+  <input id="email" formControlName="email" type="email">
+  <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+    Inserisci una email valida
+  </div>
+
+  <label for="password">Password</label>
+  <input id="password" formControlName="password" type="password">
+  <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched  ">
+    La password deve avere almeno 6 caratteri
+  </div>
+
+  <button type="submit" [disabled]="registerForm.invalid">Registrati</button>
+</form>
+
+<p>Hai già un account? 
+  <span (click)="goToLogin()" style="color: blue; cursor: pointer;">Accedi</span>
+</p>
+
+<p *ngIf="successMessage" class="success">{{ successMessage }}</p>
+<p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+
