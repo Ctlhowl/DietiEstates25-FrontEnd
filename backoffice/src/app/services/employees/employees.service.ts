@@ -11,6 +11,7 @@ import { environment } from '../../../environments/environments';
 export class EmployeesService {
 
   private apiRetrievingEmployees = `${environment.apiBackoffice}`;
+  private apiUser = `${environment.apiAccount}`;
 
   constructor(private http: HttpClient) {}
 
@@ -20,5 +21,12 @@ export class EmployeesService {
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`
     });
     return this.http.get<ApiResponse<User[]>>(`${this.apiRetrievingEmployees}?agency=${agency}`, {headers});
+  }
+
+  deleteEmployee(id: number | undefined): Observable<ApiResponse<void>> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+    });
+    return this.http.delete<ApiResponse<void>>(`${this.apiUser}?userId=${id}`, {headers});
   }
 }

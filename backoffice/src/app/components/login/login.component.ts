@@ -10,16 +10,12 @@ import { Router } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   email: string = '';
   password: string = '';
   errorMessage: string = '';
 
   constructor(private loginService: LoginService,private router: Router) {}
-
-  ngOnInit(): void {
-    this.renderButton(this.loginService.initGoogleLogin());
-  }
 
   login() {
     this.loginService.login({ email: this.email, password: this.password }).subscribe({
@@ -34,13 +30,6 @@ export class LoginComponent implements OnInit {
         this.errorMessage = 'Credenziali non valide';
       }
     });
-  }
-
-  private renderButton(google: any): void{
-    google.accounts.id.renderButton(
-      document.getElementById("buttonDiv"),
-      { size: "large", shape: "pill" }  // customization attributes
-    );
   }
 
   /*goToRegistration(){

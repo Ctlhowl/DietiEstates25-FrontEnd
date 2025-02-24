@@ -4,48 +4,14 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environments';
 import { ApiResponse } from '../../serialization/apiResponse';
 
-declare var google: any;
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
   private apiLogin = `${environment.apiAuth}`;
-  private clientId = '138178385722-j0h9vks1bl6p20nq07a993h7195ai23g.apps.googleusercontent.com';
 
   constructor(private http: HttpClient) {}
-
-  public initGoogleLogin(): any {
-    google.accounts.id.initialize({
-      client_id: this.clientId,
-      callback: (response: any) => this.handleGoogleSignIn(response)
-    });
-
-    return google;
-  }
-
-  // Gestisce la risposta del login
-  private handleGoogleSignIn(response: any): void {
-    const token = response.credential;
-    console.log('Token ricevuto:', token);
-
-    // Invia il token al backend per la verifica
-    this.sendTokenToBackend(token);
-  }
-
-
-  private sendTokenToBackend(token: string): void {
-    this.http.post<ApiResponse<{token: string}>>(this.apiLogin + '/google', { token })
-      .subscribe({
-        next:(response: ApiResponse<{token: string}>) => {
-          console.log('Risposta dal backend:', response);
-          this.saveToken(response.data.token)
-          console.log(this.getUserId())
-        },
-        error: (error) => {
-          console.error('Errore durante l\'invio del token:', error);
-        }});
-  }
 
   login(credentials: { email: string; password: string }): Observable<ApiResponse<{token: string}>> {
     return this.http.post<ApiResponse<{token: string}>>(`${this.apiLogin}/login`, credentials);

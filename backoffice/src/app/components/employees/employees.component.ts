@@ -29,4 +29,18 @@ export class EmployeesComponent implements OnInit {
       }
     });
   }
+
+  deleteEmployee(id: number | undefined) {
+    if (confirm('Sei sicuro di voler eliminare questo dipendente?')) {
+      this.employeeService.deleteEmployee(id).subscribe({
+        next: () => {
+          // Rimuove il dipendente dalla lista dopo l'eliminazione
+          this.users = this.users.filter(user => user.id !== id);
+        },
+        error: () => {
+          alert('Errore durante l\'eliminazione del dipendente.');
+        }
+      });
+    }
+  }
 }

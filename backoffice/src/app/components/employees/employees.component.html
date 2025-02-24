@@ -8,6 +8,7 @@
       <th>Cognome</th>
       <th>Email</th>
       <th>Ruolo</th>
+      <th>Azione</th>
     </tr>
   </thead>
   <tbody>
@@ -16,7 +17,9 @@
       <td>{{ employee.surname }}</td>
       <td>{{ employee.email }}</td>
       <td>{{ employee.role }}</td>
+      <td>
+        <button (click)="deleteEmployee(employee.id)">Elimina</button>
+      </td>
     </tr>
   </tbody>
 </table>
-
