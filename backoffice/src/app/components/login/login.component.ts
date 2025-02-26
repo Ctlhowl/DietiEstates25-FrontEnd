@@ -24,16 +24,12 @@ export class LoginComponent {
         console.log('UserID:', this.loginService.getUserId());
         console.log('UserRole:', this.loginService.getUserRole());
 
-        this.router.navigate(['/list']);
+        this.router.navigate(['/estate']);
       },
       error: () => {
         this.errorMessage = 'Credenziali non valide';
       }
     });
   }
-
-  /*goToRegistration(){
-    this.router.navigate(['/registration']);
-  }*/
 
 }

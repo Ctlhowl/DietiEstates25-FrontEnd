@@ -1,6 +1,8 @@
 <div *ngIf="isLoading">Caricamento...</div>
 <div *ngIf="errorMessage">{{ errorMessage }}</div>
 
+<button (click)="addEmployee()">Aggiungi Dipendente</button>
+
 <table *ngIf="!isLoading && !errorMessage" border="5">
   <thead>
     <tr>

@@ -1,5 +1,5 @@
 import { User } from '../../interfaces/user';
-import { AccountService } from './../../services/account/account.service';
+import { AccountService } from '../../services/account/account.service';
 import { Component, OnInit } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -12,9 +12,11 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './account.component.css'
 })
 export class AccountComponent implements OnInit{
-  user: User = { email: '', name: '', surname: '' , role: ''};
-  copiedUser: User = { email: '', name: '', surname: '' , role: ''};
+  user: User = { email: '', name: '', surname: '', role: ''};
+  copiedUser: User = { email: '', name: '', surname: '', role: ''};
   isModified: boolean = false;
+  showPasswordField = false;
+  newPassword = '';
 
   constructor(private accountService: AccountService) {}
 
@@ -34,12 +36,22 @@ export class AccountComponent implements OnInit{
     }
   }
 
+  togglePasswordField() {
+    this.showPasswordField = true;
+  }
+
+  savePassword() {
+    this.user.password = this.newPassword;
+    this.checkForChanges();
+  }
+
   private copyUser(): User{
     return{
       name: this.user.name,
       surname: this.user.surname,
       email: this.user.email,
-      role: this.user.role,
+      password: this.user.password,
+      role: this.user.role
     }
   }
 
@@ -52,6 +64,7 @@ export class AccountComponent implements OnInit{
   }
 
   private checkModifiedInfo(){
+    console.log(this.copiedUser.password)
     if(this.user.name !== this.copiedUser.name){
       return true;
     }
@@ -59,6 +72,9 @@ export class AccountComponent implements OnInit{
       return true;
     }
     if(this.user.email !== this.copiedUser.email){
+      return true;
+    }
+    if(this.user.password !== this.copiedUser.password){
       return true;
     }
 
@@ -69,6 +85,7 @@ export class AccountComponent implements OnInit{
     if (this.isModified){
       if (!this.user) return; 
 
+      
       this.accountService.updateUser(this.user).subscribe({
       next: (response) => {
         console.log("User aggiornato con successo!", response);

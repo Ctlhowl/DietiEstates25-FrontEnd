@@ -37,19 +37,19 @@ export class SidenavComponent implements OnInit{
     if (this.userRole === 'ROLE_ADMIN' || this.userRole === 'ROLE_MANAGER'){
       this.navDataEmployee = [
         {
-          routeLink: '/',
+          routeLink: 'account',
           icon: 'person',
           label: 'Account',
           role: this.userRole,
         },
         {
-          routeLink: '/',
+          routeLink: 'estate',
           icon: 'home',
           label: 'Inserzioni',
           role: this.userRole,
         },
         {
-          routeLink: '/',
+          routeLink: 'employees',
           icon: 'deployed_code_account',
           label: 'Gestione Immobiliare',
           role: this.userRole,

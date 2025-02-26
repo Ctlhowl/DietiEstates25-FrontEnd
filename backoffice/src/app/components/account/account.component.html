@@ -7,7 +7,13 @@
     
     <label>Email:</label>
     <input type="email" [(ngModel)]="user.email" name="email" (ngModelChange)="checkForChanges()">
-  
+
+    <button (click)="togglePasswordField()" [disabled]="showPasswordField">Cambia password</button>
+
+    <div *ngIf="showPasswordField">
+        <input type="password" [(ngModel)]="newPassword"  name="password" placeholder="Nuova password">
+        <button (click)="savePassword()">Salva</button>
+    </div>
+
     <button (click)="updateUserInfo()" [disabled]="!isModified">Modifica</button>
 </form>
-  

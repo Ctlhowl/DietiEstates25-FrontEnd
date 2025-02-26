@@ -2,6 +2,7 @@ import { User } from './../../interfaces/user';
 import { Component, OnInit } from '@angular/core';
 import { EmployeesService } from '../../services/employees/employees.service';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-employees',
@@ -14,7 +15,7 @@ export class EmployeesComponent implements OnInit {
   isLoading = true;
   errorMessage = '';
 
-  constructor(private employeeService: EmployeesService) {}
+  constructor(private employeeService: EmployeesService,private router: Router) {}
 
   ngOnInit(): void {
     this.employeeService.getEmployees().subscribe({
@@ -42,5 +43,9 @@ export class EmployeesComponent implements OnInit {
         }
       });
     }
+  }
+
+  addEmployee(){
+    this.router.navigate(['employees/new']);
   }
 }
