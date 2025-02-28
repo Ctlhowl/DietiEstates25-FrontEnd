@@ -8,21 +8,21 @@
 
     <div class="d-flex justify-content-center">
         <div class="card p-5 shadow-sm" style="width: 600px;">
-            <div>
-                <h6>Nome</h6>
-                <p>Fabrizio</p>
-            </div>
-            <div class="mt-4">
-                <h6>Cognome</h6>
-                <p>Ciotola</p>
-            </div>
-            <div class="mt-4">
-                <h6>Email</h6>
-                <p>fabrizio&#64;topdev.com</p>
-            </div>
+            @if(user){
+                <div>
+                    <h6>Nome</h6>
+                    <p>{{user.name}}</p>
+                </div>
+                <div class="mt-4">
+                    <h6>Cognome</h6>
+                    <p>{{user.surname}}</p>
+                </div>
+                <div class="mt-4">
+                    <h6>Email</h6>
+                    <p>{{user.email}}</p>
+                </div>
+            }
         </div>
-
-
     </div>
 
     <hr class="custom-line-bold">
@@ -46,40 +46,42 @@
                 <h1 class="modal-title fs-5" id="profileModalLabel">Modifica Profilo</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form class="ms-5 me-5">
+            <form class="ms-5 me-5" [formGroup]="form" (ngSubmit)="onEditUser()">
                 <div class="modal-body">
                     <div class="mb-4 w-100">
                         <label for="name" class="form-label">Nome</label>
-                        <input type="text" class="form-control" placeholder="Nome" aria-label="name" id="name" required>
+                        <input type="text" class="form-control" placeholder="Nome" aria-label="name" id="name" formControlName="name" required>
                     </div>
 
                     <div class="mb-4 w-100">
                         <label for="surname" class="form-label">Cognome</label>
-                        <input type="text" class="form-control" placeholder="Cognome" aria-label="surname" id="surname"
+                        <input type="text" class="form-control" placeholder="Cognome" aria-label="surname" id="surname" formControlName="surname"
                             required>
                     </div>
 
                     <div class="mb-4 w-100">
                         <label for="email" class="form-label">Email</label>
-                        <input type="text" class="form-control" placeholder="Email" aria-label="email" id="email"
+                        <input type="text" class="form-control" placeholder="Email" aria-label="email" id="email" formControlName="email"
                             required>
                     </div>
 
                     <div class="mb-5 w-100">
-                        <label for="password" class="form-label">Nuova Password</label>
+                        <button (click)="onChangePassword()" type="button"  for="password" class="btn btn-primary mb-2">{{changePassword ? "Annulla" : "Cambia password"}}</button>
+                        @if(changePassword){
                         <div class="input-group  d-flex align-items-center">
                             <input [type]="showPassword ? 'text' : 'password'" class="form-control"
-                                placeholder="Password" aria-describedby="password" id="password" required>
+                                placeholder="Password" aria-describedby="password" id="password" formControlName="password" required>
                             <span id="password" class="material-symbols-outlined input-group-text"
                                 (click)="onShowPassword()">
                                 {{showPassword ? 'visibility' : 'visibility_off'}}
                             </span>
                         </div>
+                       }
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><b>Annulla</b></button>
-                    <button type="button" class="btn btn-primary"><b>Salva</b></button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="edit-userForm"><b>Annulla</b></button>
+                    <button type="submit" class="btn btn-primary" [disabled]="form.invalid"><b>Salva</b></button>
                 </div>
             </form>
         </div>

@@ -1,0 +1,81 @@
+<div class="modal fade modal-lg" id="historyOfferModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="historyOfferModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="historyOfferModalLabel">Storico Offerte</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body table-responsive">
+            <h5>Offerte Attive</h5>
+            <table class="table align-middle">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Data</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Offerte Proposte</th>
+                    <th scope="col">Stato</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    @for (item of activeOffers; track $index) {
+                    <tr style="height: 75px;">
+                        <th scope="row">{{$index + 1}}</th>
+                        <th>{{item.updatedAt}}</th>
+                        <th>{{item.emailUser}}</th>
+                        <th>{{item.price}}</th>
+                        <th>{{item.status}}</th>
+                        <th><button class="btn btn-success">Accetta</button></th>
+                        <th><button class="btn btn-danger">Rifiuta</button></th>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+
+            <hr class="mt-3 custom-line-bold">
+            <h5>Storico Offerte</h5>
+            <table class="table align-middle">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Data</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Offerte Proposte</th>
+                    <th scope="col">Stato</th>
+                  </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    @for (item of offers; track $index) {
+                    <tr style="height: 75px;">
+                        <th scope="row">{{$index + 1}}</th>
+                        <th>{{item.updatedAt}}</th>
+                        <th>{{item.emailUser}}</th>
+                        <th>{{item.price}}</th>
+                        <th>{{item.status}}</th>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="modal-footer d-flex justify-content-start mt-5">
+            <form>
+                <div class="d-flex justify-content-center">
+                    <div class="mb-4 w-100 me-4">
+                        <label for="new-offer" class="form-label">Proposta Esterna</label>
+                        <input type="number" step="1" class="form-control" placeholder="Offerta" aria-label="new-offer" id="new-offer" required>
+                    </div>
+                    <div class="mb-4 w-100">
+                        <label for="new-offer-email" class="form-label">Email Esterna</label>
+                        <input type="text" step="1" class="form-control" placeholder="Email" aria-label="new-offer-email" id="new-offer-email" required>
+                    </div> 
+                </div>
+                
+                <button type="button" class="btn btn-primary">Salva</button>
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>

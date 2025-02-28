@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { SidenavComponent } from "./components/sidenav/sidenav.component";
 
 @Component({
@@ -9,5 +9,11 @@ import { SidenavComponent } from "./components/sidenav/sidenav.component";
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'frontend';
+  title = 'Dieti-Estate25';
+
+  constructor(private router: Router) { }
+
+  get isNavbarVisibile(): boolean {
+    return this.router.url === '/login';
+  }
 }

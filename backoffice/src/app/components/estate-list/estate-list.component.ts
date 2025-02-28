@@ -1,22 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Estate } from '../../interfaces/estate';
 import { EstateService } from '../../services/estate/estate.service';
 import { ApiResponse } from '../../serialization/apiResponse';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterOutlet } from '@angular/router';
+import { HistoryOfferComponent } from "../history-offer/history-offer.component";
 
 @Component({
   selector: 'app-estate-list',
-  imports: [CommonModule, RouterLink, RouterOutlet],
+  imports: [CommonModule, RouterLink, RouterOutlet, HistoryOfferComponent],
   templateUrl: './estate-list.component.html',
   styleUrl: './estate-list.component.css'
 })
 export class EstateListComponent implements OnInit {
+  @ViewChild(HistoryOfferComponent) historyOfferComponent!: HistoryOfferComponent;
   protected estates: Estate[] = [];
   protected estate?: Estate;
 
   private filter = {
-    userId: 1
+    userId: Number(localStorage.getItem("userId")) ?? 0
   };
 
   constructor(private estateService: EstateService) {}

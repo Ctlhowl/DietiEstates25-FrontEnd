@@ -3,99 +3,92 @@ import { AccountService } from '../../services/account/account.service';
 import { Component, OnInit } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ApiResponse } from '../../serialization/apiResponse';
 
 @Component({
   selector: 'app-account',
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule,  ReactiveFormsModule],
   templateUrl: './account.component.html',
   styleUrl: './account.component.css'
 })
 export class AccountComponent implements OnInit{
-  user: User = { email: '', name: '', surname: '', role: ''};
-  copiedUser: User = { email: '', name: '', surname: '', role: ''};
-  isModified: boolean = false;
-  showPasswordField = false;
-  newPassword = '';
+  protected user!: User;
+  protected form!: FormGroup;
+  protected showPassword: boolean = false;
+  protected changePassword: boolean = false;
 
   constructor(private accountService: AccountService) {}
 
-  async ngOnInit() {
-    await this.loadUserInfo();
-    console.log(this.user); 
+  ngOnInit(): void {
+    this.createForm()
+    this.loadUserInfo();
+  }
+
+  private createForm(): void {
+    this.form = new FormGroup({
+      name: new FormControl(null, Validators.required),
+      surname: new FormControl(null, Validators.required),
+      email: new FormControl(null, Validators.required),
+      password: new FormControl(null)
+    });
+  }
+
+  private loadForm(user: User): void {
+    this.form.get('id')?.setValue(localStorage.getItem("userId"));``
+    this.form.get('name')?.setValue(user.name);
+    this.form.get('surname')?.setValue(user.surname);
+    this.form.get('email')?.setValue(user.email);
+    this.form.get('role')?.setValue(user.role);
+    this.form.get('provider')?.setValue(user.provider);
   }
   
-  async loadUserInfo() {
-    try {
-      const retrievedUser = await firstValueFrom(this.accountService.getUserInfo());
-      this.user = retrievedUser.data;
-      this.copiedUser = this.copyUser();
-      this.isModified = false;
-    } catch (error) {
-      console.error("Errore nel recupero delle informazioni dell'utente", error);
-    }
+  private loadUserInfo(): void {     
+      this.accountService.getUserInfo().subscribe(
+        {
+          next: (response: ApiResponse<User>) => {
+            this.user = response.data;
+          },
+          error: (error) => {
+            console.error("Errore nel recupero delle informazioni dell'utente", error);
+          },
+          complete: () => {
+            this.loadForm(this.user);
+          }
+        }
+      );
   }
 
-  togglePasswordField() {
-    this.showPasswordField = true;
-  }
-
-  savePassword() {
-    this.user.password = this.newPassword;
-    this.checkForChanges();
-  }
-
-  private copyUser(): User{
-    return{
-      name: this.user.name,
-      surname: this.user.surname,
-      email: this.user.email,
-      password: this.user.password,
-      role: this.user.role
-    }
-  }
-
-  checkForChanges() {
-    if(this.checkModifiedInfo()){
-      this.isModified = true;
-    }else{
-      this.isModified = false;
-    }
-  }
-
-  private checkModifiedInfo(){
-    console.log(this.copiedUser.password)
-    if(this.user.name !== this.copiedUser.name){
-      return true;
-    }
-    if(this.user.surname !== this.copiedUser.surname){
-      return true;
-    }
-    if(this.user.email !== this.copiedUser.email){
-      return true;
-    }
-    if(this.user.password !== this.copiedUser.password){
-      return true;
-    }
-
-    return false
-  }
-
-  updateUserInfo() {
-    if (this.isModified){
-      if (!this.user) return; 
-
-      
-      this.accountService.updateUser(this.user).subscribe({
-      next: (response) => {
-        console.log("User aggiornato con successo!", response);
-        this.loadUserInfo(); 
-      },
-      error: (error) => {
-        console.error("Errore nell'aggiornamento dell'utente", error);
-      }
-      });
-    }
+  protected onEditUser(): void {
+    document.getElementById('edit-userForm')?.click();
     
+    this.user = this.mapToUser(this.form);
+    console.log(this.user);
+
+    this.accountService.updateUser(this.user).subscribe();
+  }
+
+  /**
+   * @description Show and hide password 
+   */
+  protected onShowPassword(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  protected onChangePassword(): void {
+    this.changePassword = !this.changePassword;
+  }
+
+  protected mapToUser(form: FormGroup): User {
+    return {
+      id: Number(localStorage.getItem("userId")),
+      name: form.get("name")?.value,
+      surname: form.get("surname")?.value,
+      email: form.get("email")?.value,
+      password: this.changePassword ? form.get("password")?.value : this.user.password,
+      role: this.user.role,
+      provider: this.user.provider,
+      agency: this.user.agency
+    }
   }
 }
