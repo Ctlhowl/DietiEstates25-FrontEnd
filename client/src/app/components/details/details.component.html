@@ -1,0 +1,201 @@
+<div class="container mt-5">
+    <div class="row mb-5">
+        <div class="col-12 col-md-8">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-2 gap-md-0">
+                <div class="link d-flex align-items-center me-md-3 mb-2 mb-md-0" [routerLink]="['/estate']"
+                    routerLinkActive="router-link-active">
+                    <span class="material-symbols-outlined me-1">arrow_back_ios</span>
+                    <b>Lista Annunci</b>
+                </div>
+
+                <!--
+                <div class="d-flex gap-2 justify-content-between">
+                    <div class="link d-flex align-items-center me-2">
+                        <span class="material-symbols-outlined me-1">arrow_back_ios</span>
+                        <b>Precedente</b>
+                    </div>
+                    <div class="link d-flex align-items-center">
+                        <b>Successivo</b>
+                        <span class="material-symbols-outlined ms-1">arrow_forward_ios</span>
+                    </div>
+                </div>
+                -->
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4 mt-3 align-items-md-center mt-md-0">
+            <div class="d-flex justify-content-md-end justify-content-center gap-2">
+                <div class="section d-flex align-items-center btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#historyOfferModal">
+                    <span class="material-symbols-outlined me-1">chat</span>
+                    <b>Proponi Offerta</b>
+                </div>
+                <app-history-offer [estateId]="estate.id!"></app-history-offer>
+
+                <div class="section d-flex align-items-center favorite">
+                    <span class="material-icons-sharp">{{ isFavorite ? 'favorite' : 'favorite_border' }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        @if(estate){
+        <div class="col-12 col-md-8">
+            <div>
+                <div class="row">
+                    <div class="col-12 col-md-8">
+                        <div id="carousel{{ estate.id }}" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                @if(estate.files.length != 0){ @for (file of estate.files; track
+                                $index) {
+                                <div class="carousel-item" [ngClass]="{ active: $index === 0 }">
+                                    <img [src]="file.url" class="property-image w-100" />
+                                </div>
+                                }
+
+                                <button class="carousel-control-prev" type="button"
+                                    [attr.data-bs-target]="'#carousel' + estate.id" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button"
+                                    [attr.data-bs-target]="'#carousel' + estate.id" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                                }@else {
+                                <div class="carousel-item active">
+                                    <img src="assets/icons/no-foto.png" class="property-image w-100" />
+                                </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4 mt-3 mt-md-0">
+                        <div class="thumb-container scrollable">
+                            @for (file of estate.files; track $index) {
+                            <img [src]="file.url" [attr.data-bs-target]="'#carousel' + estate.id"
+                                [attr.data-bs-slide-to]="$index" class="rounded mx-auto d-block" />
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-5 d-flex flex-column flex-md-row section">
+                    <div class="d-flex align-items-center me-md-5 mb-3 mb-md-0">
+                        <span class="material-symbols-outlined">map</span>
+                        <b>{{ estate.title }} - {{ estate.location.street }},
+                            {{ estate.location.city }} ({{ estate.location.countyCode }})
+                        </b>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <h5>€ {{ estate.price.toFixed(2) }}</h5>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="custom-line"></div>
+                <h5 class="section">Descrizione</h5>
+                <p>{{ estate.description }}</p>
+            </div>
+
+            <div>
+                <div class="custom-line"></div>
+                <h5 class="section">Caratteristiche</h5>
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <div class="d-flex align-items-center">
+                            <span class="material-symbols-outlined">home_work</span>
+                            <div>
+                                <b>Tipologia</b>
+                                <p>{{ estate.category.name }}</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center">
+                            <span class="material-symbols-outlined">bed</span>
+                            <div>
+                                <b>Camere</b>
+                                <p>{{ estate.rooms }}</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center">
+                            <span class="material-symbols-outlined">bathtub</span>
+                            <div>
+                                <b>Servizi</b>
+                                <p>{{ estate.services }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="d-flex align-items-center">
+                            <span class="material-symbols-outlined">energy_savings_leaf</span>
+                            <div>
+                                <b>Classe Energetica</b>
+                                <p>{{ estate.energyClass }}</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center">
+                            <span class="material-symbols-outlined">contract</span>
+                            <div>
+                                <b>Contratto</b>
+                                <p>{{ estate.rental ? "Affitto" : "Vendita" }}</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center">
+                            <span class="material-symbols-outlined">pan_zoom</span>
+                            <div>
+                                <b>Mtq</b>
+                                <p>{{ estate.mtq }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <h6 class="section">Caratteristiche Aggiuntive</h6>
+                    @for (item of estate.addons; track $index) {
+                    <div class="btn btn-primary me-3 me-md-3 mb-2">{{ item.name }}</div>
+                    }
+                </div>
+            </div>
+
+            <div>
+                <div class="custom-line"></div>
+                <h5 class="section">Informazioni sul prezzo</h5>
+                <div class="mt-auto d-flex flex-column flex-md-row">
+                    <div class="d-flex align-items-center me-md-5 mb-3 mb-md-0">
+                        <span class="material-symbols-outlined">sell</span>
+                        <div>
+                            <b>Prezzo</b>
+                            <p>€ {{ estate.price.toFixed(2) }}</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <span class="material-symbols-outlined">leaderboard</span>
+                        <div>
+                            <b>Prezzo al m²</b>
+                            <p>{{ (estate.price / estate.mtq).toFixed(2) }} €/m²</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+        <div class="col-12 col-md-4 mt-5 mt-md-0">
+            <h5 class="section">Mappa</h5>
+            <div id="map" style="height: 300px"></div>
+            @if(estate){
+            <h6 class="section mt-5">Punti di interesse</h6>
+            <ul>
+                @for (item of categoryCountMap | keyvalue; track $index) {
+                <li>{{ item.key }}: {{ item.value }}</li>
+                }
+            </ul>
+            }
+        </div>
+    </div>
+</div>

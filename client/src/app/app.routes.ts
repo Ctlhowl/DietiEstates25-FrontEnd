@@ -1,11 +1,18 @@
 import { Routes } from '@angular/router';
-import { DetailsComponent } from './components/estate/details/details.component';
+import { ListComponent } from './components/list/list.component';
+import { LoginComponent } from './components/login/login.component';
+import { SignUpComponent } from './components/sign-up/sign-up.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { DetailsComponent } from './components/details/details.component';
 
 export const routes: Routes = [
-    //{ path: 'estate', component:  },
-    //{ path: 'estate/history', component:  },
-    //{ path: 'estate/favorite', component:  },
-    { path: 'profile', component: DetailsComponent },
+    { path: 'estates', component: ListComponent },
+    { path: 'estates/my-offers', component: ListComponent },
+    { path: 'estates/favorites', component: ListComponent },
+    { path: 'login', component: LoginComponent },
+    { path: 'sign-up', component: SignUpComponent },
+    { path: 'profile', component: ProfileComponent },
+    { path: 'estates/:id', component: DetailsComponent },
     { path: '**', redirectTo: 'estates' }
 ];
 

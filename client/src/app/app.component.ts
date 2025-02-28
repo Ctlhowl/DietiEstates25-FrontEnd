@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from "./components/navbar/navbar.component";
 
 @Component({
@@ -9,5 +9,12 @@ import { NavbarComponent } from "./components/navbar/navbar.component";
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'DietiEstate25';
+  title = 'Dieti-Estate25';
+
+  constructor(private router: Router) { }
+  
+  get isNavbarVisibile(): boolean {
+    return this.router.url === '/login' || this.router.url === '/sign-up';
+  }
 }
+
