@@ -1,0 +1,134 @@
+.material-symbols-outlined {
+  font-size: 32px;
+  font-variation-settings: "FILL" 0, "wght" 0, "GRAD" 200, "opsz" 48;
+}
+
+.sidebar {
+  width: auto;
+  align-items: center;
+  background-color: #fff;
+  transition: width 0.3s;
+  border-bottom: 1px solid;
+}
+
+.sidebar .nav-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 0px 20px;
+  color: #0d1b2a;
+}
+
+.sidebar .navbar-nav {
+  width: 100%;
+  flex-direction: row !important;
+}
+
+.sidebar-logo {
+  align-items: center;
+  padding: 20px;
+  height: 200px;
+  justify-content: center;
+}
+
+.sidebar-logo .text {
+  color: #0d1b2a;
+  margin: 20px 0;
+  font-size: 24px;
+}
+
+.sidebar-logo .logo {
+  width: 75px;
+  height: 75px;
+}
+
+.custom-line {
+  border: none;
+  height: 2px;
+  background-color: #000;
+  margin: 20px 0;
+}
+
+.sidebar .description {
+  font-size: 18px;
+}
+
+.sidebar .nav-link:hover {
+  color: #0077b6;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+}
+
+.navbar-toggler{
+  display: none;
+}
+
+@media (max-width: 650px) {
+  .sidebar {
+    width: 250px;
+    flex-direction: column;
+    align-items: flex-start;
+    position: fixed;
+    top: 0;
+    left: -250px;
+    height: 100vh;
+    background-color: #fff;
+    z-index: 1000;
+    transition: left 0.3s ease-in-out;
+    overflow-y: auto;
+  }
+
+  .navbar-toggler{
+    display: block;
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  .sidebar .navbar-brand {
+    width: 100%;
+    text-align: center;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .sidebar .navbar-nav {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .sidebar .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    color: #0d1b2a;
+    white-space: nowrap;
+  }
+
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+
+  .sidebar.open .navbar-nav {
+    display: block !important;
+  }
+
+  .sidebar .navbar-toggler {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1001;
+  }
+}

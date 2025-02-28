@@ -1,0 +1,38 @@
+<!-- Overlay per oscurare il contenuto principale -->
+<div class="sidebar-overlay" [class.open]="isSidebarOpen" (click)="closeSidebar()"></div>
+
+<nav class="sidebar navbar navbar-expand-lg" [class.open]="isSidebarOpen" style="cursor: pointer">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">DietiEstate25</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      (click)="toggleSidebar()"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="d-flex me-5">
+      <div id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          @if(userRole == "user"){ @for(item of navDataUser; track $index){
+          <a [routerLink]="[item.routeLink]" class="nav-link" (click)="closeSidebar()">
+            <span class="icon">
+              <span class="material-symbols-outlined">{{ item.icon }}</span>
+            </span>
+            <span class="description">{{ item.label }}</span>
+          </a>
+          } }@else{ @for (item of navDataGuest; track $index) {
+          <a [routerLink]="[item.routeLink]" class="nav-link" (click)="closeSidebar()">
+            <span class="icon">
+              <span class="material-symbols-outlined">{{ item.icon }}</span>
+            </span>
+            <span class="description">{{ item.label }}</span>
+          </a>
+          } }
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

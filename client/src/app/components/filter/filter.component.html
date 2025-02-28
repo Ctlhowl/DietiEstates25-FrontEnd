@@ -1,0 +1,92 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-atom" [fullScreen]="true">
+    <p style="color: white">Loading...</p>
+</ngx-spinner>
+
+<div class="card shadow-sm p-3">
+    <div class="row">
+        <div class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3">
+            <!-- Radio Buttons -->
+            <div class="form-check radio-button-group">
+                <input class="radio-input" checked type="radio" name="rental" id="sale" />
+                <label class="radio-label" style="width: 120px; text-align: center" for="sale">
+                    Vendita
+                </label>
+
+                <input class="radio-input" type="radio" name="rental" id="rental" />
+                <label class="radio-label" style="width: 120px; text-align: center" for="rental">
+                    Affitto
+                </label>
+            </div>
+
+            <!-- Dropdowns -->
+            <select class="form-select" id="category">
+                @for (item of InputFormCategories; track $index) { @if ($index == 0) {
+                <option selected [ngValue]="item.name">{{ item.name }}</option>
+                }@else {
+                <option [ngValue]="item.name">{{ item.name }}</option>
+                } }
+            </select>
+
+            <select class="form-select" id="county" required>
+                <option selected>Tutta Italia</option>
+                @for (item of InputFormCounties; track $index) {
+                <option [ngValue]="item.countyCode + '-' + item.county" (click)="loadCities(item)">
+                    {{ item.countyCode }} - {{ item.county }}
+                </option>
+                }
+            </select>
+
+            <select class="form-select" id="city" required>
+                <option selected>Tutte i comuni</option>
+                @for (item of InputFormCities; track $index) {
+                <option [ngValue]="item.postalCode + '-' + item.city">
+                    {{ item.postalCode }} - {{ item.city }}
+                </option>
+                }
+            </select>
+
+            <!-- Icona per la ricerca avanzata -->
+            <span class="material-symbols-outlined" (click)="onAdvanceSearch()">
+                {{isAdvanceSearchVisible ? 'collapse_content' : 'expand_content'}}
+            </span>
+        </div>
+    </div>
+
+    <!-- Sezione di ricerca avanzata -->
+    @if(isAdvanceSearchVisible){
+    <div class="row mt-3" id="advanceSearch">
+        <hr class="custom-line" />
+        <div class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3">
+            <!-- Prezzo -->
+            <div class="col-md-3 me-2">
+                <label for="price">Prezzo</label>
+                <div class="d-flex gap-2">
+                    <input class="form-control" type="number" placeholder="Da" />
+                    <input class="form-control" type="number" placeholder="A" />
+                </div>
+            </div>
+
+            <!-- Superficie -->
+            <div class="col-md-3 me-2">
+                <label for="price">Superficie</label>
+                <div class="d-flex gap-2">
+                    <input class="form-control" type="number" placeholder="Da" />
+                    <input class="form-control" type="number" placeholder="A" />
+                </div>
+            </div>
+
+            <!-- Numero Stanze -->
+            <div class="col-md-3">
+                <label for="price">Numero Stanze</label>
+                <select class="form-select" id="city" required>
+                    <option selected>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>> 4</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    }
+</div>
