@@ -1,5 +1,7 @@
 <div class="layout">
-  <app-navbar class="sidebar"></app-navbar>
+  @if (!isNavbarVisibile) {
+    <app-navbar class="sidebar"></app-navbar>
+  }
   <div class="content">
     <router-outlet></router-outlet>
   </div>

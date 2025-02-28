@@ -1,0 +1,44 @@
+.material-symbols-outlined {
+  font-size: 32px;
+  font-variation-settings: "FILL" 0, "wght" 0, "GRAD" 200, "opsz" 48;
+  cursor: pointer;
+}
+
+.radio-button-group {
+  display: flex;
+  gap: 10px;
+}
+
+.radio-input {
+  display: none;
+}
+
+.radio-label {
+  padding: 10px 20px;
+  background-color: #e9ecef;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.radio-input:checked + .radio-label {
+  background-color: #0077b6;
+  color: white;
+  border-color: #0077b6;
+}
+
+.radio-label:hover {
+  background-color: #ddd;
+}
+
+.custom-line-bold {
+  border: none;
+  height: 2px;
+  background-color: #415a77;
+  margin: 10px 0 10px;
+}
+
+#advanceSearch {
+  transition: opacity 0.3s ease-in-out;
+}

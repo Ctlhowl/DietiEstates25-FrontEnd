@@ -1,38 +1,50 @@
 .custom-line {
-    border: none;
-    height: 2px;
-    background-color: #415a77;
-    margin: 10px 40xp 10px 40px;
+  border: none;
+  height: 2px;
+  background-color: #415a77;
+  margin: 10px 40xp 10px 40px;
 }
 
 .custom-line-bold {
-    border: none ;
-    height: 2px;
-    background-color: #415a77;
-    margin: 10px 0 10px;
+  border: none;
+  height: 2px;
+  background-color: #415a77;
+  margin: 10px 0 10px;
 }
-
 
 .material-symbols-outlined {
-    font-size: 32px;
-    color: #c1121f;
-    font-variation-settings:
-    'FILL' 0,
-    'wght' 0,
-    'GRAD' 200,
-    'opsz' 48;
+  font-size: 32px;
+  color: #c1121f;
+  font-variation-settings: "FILL" 0, "wght" 0, "GRAD" 200, "opsz" 48;
 }
 
-.material-symbols-outlined:hover{
-    color: #780000;
+.material-symbols-outlined:hover {
+  color: #780000;
 }
 
-.btn-success{
-    border-color:  #778da9;
-    background-color: #778da9;
+.btn-primary{
+  border-color: #0077b6;
+  background-color: #fff;
+  color: #0077b6;
+  width: 200px;
 }
 
-.btn-success:hover{
-    border-color: #415a77;
-    background-color: #415a77;
+.btn-primary:hover{
+  border-color: #0077b6;
+  background-color: #0077b6;
+  color: #fff;
+  width: 200px;
+}
+
+.btn-check:checked + label {
+  border-color: #0077b6;
+  background-color: #0077b6;
+  color: #fff;
+}
+
+.btn-primary:checked{
+  border-color: #0077b6;
+  background-color: #0077b6;
+  color: #fff;
+  width: 200px;
 }

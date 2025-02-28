@@ -1,0 +1,50 @@
+<div class="modal fade modal-lg" id="historyOfferModal" tabindex="-1" aria-labelledby="historyOfferModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="historyOfferModalLabel">Storico Offerte</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body table-responsive">
+            <table class="table align-middle">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Data</th>
+                    <th scope="col">Offerte Proposte</th>
+                    <th scope="col">Stato</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    @for (item of offers; track $index) {
+                    <tr style="height: 75px;">
+                        <th scope="row">{{$index + 1}}</th>
+                        <th>{{item.createdAt}}</th>
+                        <th>{{item.price}}</th>
+                        <th>{{item.status}}</th>
+                        @if (item.status === "Nuova Proposta") {
+                            <th><button class="btn btn-success">Accetta</button></th>
+                            <th><button class="btn btn-danger">Rifiuta</button></th>
+                        }@else {
+                            <th></th>
+                            <th></th>
+                        }
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer d-flex justify-content-start mt-5">
+            <form>
+                <div class="mb-4 w-100">
+                    <label for="new-offer" class="form-label">Nuova Proposta</label>
+                    <input type="number" step="1" class="form-control" placeholder="Proponi un Offerta" aria-label="new-offer" id="new-offer" required>
+                </div>
+                <button type="button" class="btn btn-primary">Invia Proposta</button>
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>

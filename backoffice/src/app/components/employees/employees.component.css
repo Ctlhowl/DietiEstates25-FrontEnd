@@ -1,0 +1,30 @@
+.btn-primary {
+  border-color: #0077b6;
+  background-color: #0077b6;
+  color: #fff;
+  width: 200px;
+}
+
+.btn-primary:hover {
+  border-color: #0077b6;
+  background-color: #fff;
+  color: #0077b6;
+  width: 200px;
+}
+
+.custom-line-bold {
+  border: none;
+  height: 2px;
+  background-color: #415a77;
+  margin: 10px 0 10px;
+}
+
+.material-symbols-outlined {
+  font-size: 32px;
+  color: #c1121f;
+  font-variation-settings: "FILL" 0, "wght" 0, "GRAD" 200, "opsz" 48;
+}
+
+.material-symbols-outlined:hover {
+  color: #780000;
+}

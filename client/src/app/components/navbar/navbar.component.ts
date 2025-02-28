@@ -9,7 +9,6 @@ type NavItem = {
   role: string
 };
 
-
 @Component({
   selector: 'app-navbar',
   standalone: true,
@@ -18,7 +17,7 @@ type NavItem = {
     {
       provide: IMAGE_CONFIG,
       useValue: {
-        disableImageSizeWarning: true, 
+        disableImageSizeWarning: true,
         disableImageLazyLoadWarning: true
       }
     },
@@ -31,19 +30,20 @@ export class NavbarComponent {
   navDataUser: NavItem[] = [];
   navDataGuest: NavItem[] = [];
   userRole: string = "user";
+  isSidebarOpen = false;
 
   ngOnInit(): void {
     this.navDataUser = [
       {
-        routeLink: '/favorite-estate',
-        icon: 'favorite',
-        label: 'I miei preferiti',
+        routeLink: '/estates/my-offers',
+        icon: 'notifications',
+        label: 'Le mie offerte',
         role: 'user',
       },
       {
-        routeLink: '/history',
-        icon: 'notifications',
-        label: 'Le mie offerte',
+        routeLink: '/estates/favorites',
+        icon: 'favorite',
+        label: 'I miei preferiti',
         role: 'user',
       },
       {
@@ -62,6 +62,20 @@ export class NavbarComponent {
         role: 'guest',
       }
     ]
+  }
+
+  /**
+   * @description Open and close the sidebar
+   */
+  toggleSidebar() {
+    this.isSidebarOpen = !this.isSidebarOpen;
+  }
+
+  /**
+   * @description Close the sidebar
+   */
+  closeSidebar() {
+    this.isSidebarOpen = false;
   }
 
 }

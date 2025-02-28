@@ -1,0 +1,41 @@
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Registrati</h2>
+    <div class="d-flex justify-content-center">
+        <div class="card align-items-center justify-content-center d-flex shadow-sm" style="width: 600px;">
+            <form class="mt-5 ms-5 me-5">
+                <div class="mb-4 w-100">
+                    <label for="name" class="form-label">Nome</label>
+                    <input type="text" class="form-control" placeholder="Nome" aria-label="name" id="name" required>
+                </div>
+
+                <div class="mb-4 w-100">
+                    <label for="surname" class="form-label">Cognome</label>
+                    <input type="text" class="form-control" placeholder="Cognome" aria-label="surname" id="surname" required>
+                </div>
+
+                <div class="mb-4 w-100">
+                    <label for="email" class="form-label">Inserisci la tua email</label>
+                    <input type="text" class="form-control" placeholder="Email" aria-label="email" id="email" required>
+                </div>
+    
+                <div class="mb-5 w-100">
+                    <label for="password" class="form-label">Inserisci una password</label>
+                    <div class="input-group  d-flex align-items-center">
+                        <input [type]="showPassword ? 'text' : 'password'" class="form-control" placeholder="Password" aria-describedby="password" id="password" required>
+                        <span id="password" class="material-symbols-outlined input-group-text" (click)="onShowPassword()">
+                            {{showPassword ? 'visibility' : 'visibility_off'}}
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary mb-3" style="width: 200px;"><b>Continua</b></button>
+                </div>
+            </form>
+
+            <div class="align-items-center text-center mb-5">
+                <a class=" w-100 mb-3" [routerLink]="['/login']"><b>Ho già un account</b></a>
+            </div>
+        </div>
+    </div>
+</div>

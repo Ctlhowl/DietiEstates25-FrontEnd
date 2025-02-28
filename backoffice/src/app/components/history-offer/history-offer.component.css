@@ -1,0 +1,25 @@
+.btn-primary {
+  border-color: #0077b6;
+  background-color: #0077b6;
+  color: #fff;
+  width: 200px;
+}
+
+.btn-primary:hover {
+  border-color: #0077b6;
+  background-color: #fff;
+  color: #0077b6;
+  width: 200px;
+}
+
+.section {
+  color: #0077b6;
+  cursor: pointer;
+}
+
+.custom-line-bold {
+  border: none;
+  height: 2px;
+  background-color: #415a77;
+  margin: 10px 0 10px;
+}

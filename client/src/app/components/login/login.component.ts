@@ -47,4 +47,13 @@ export class LoginComponent implements OnInit {
     this.router.navigate(['/registration']);
   }
 
+  protected showPassword: boolean = false;
+  
+  /**
+   * @description Show and hide password 
+   */
+  protected onShowPassword() {
+    this.showPassword = !this.showPassword;
+  }
+
 }

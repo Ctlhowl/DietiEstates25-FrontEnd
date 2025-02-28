@@ -1,0 +1,105 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-atom" [fullScreen]="true">
+  <p style="color: white"> Loading... </p>
+</ngx-spinner>
+
+
+<div class="container p-5">
+  <div class="row text-center mb-3">
+    <div class="col">
+      <h3>Lista Dipendenti</h3>
+    </div>
+  </div>
+  <hr class="custom-line-bold">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Nome</th>
+        <th scope="col">Cognome</th>
+        <th scope="col">Email</th>
+        <th scope="col">Ruolo</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody class="table-group-divider" style="width: 500px;">
+      @for (item of users; track $index) {
+      <tr style="height: 75px;">
+        <th scope="row">{{$index + 1}}</th>
+        <th>{{item.name}}</th>
+        <th>{{item.surname}}</th>
+        <th>{{item.email}}</th>
+        <th>{{item.role}}</th>
+        <th>
+          <span class="material-symbols-outlined" (click)="deleteEmployee(item.id)">
+            delete_forever
+          </span>
+        </th>
+      </tr>
+      }
+    </tbody>
+  </table>
+
+  <hr class="custom-line-bold">
+  <div class="text-center">
+    <button data-bs-toggle="modal" data-bs-target="#addEmployeeModal" class="btn btn-primary">Aggiungi Dipendente</button>
+  </div>
+</div>
+
+<div class="modal fade" id="addEmployeeModal" tabindex="-1" aria-labelledby="addEmployeeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="addEmployeeModalLabel">Nuovo Dipendente</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form class="ms-5 me-5" [formGroup]="registerForm" (ngSubmit)="onNewEmployee()">
+          <div class="modal-body">
+            <div class="mb-4 w-100">
+              <label for="name" class="form-label">Nome</label>
+              <input type="text" class="form-control" placeholder="Nome" aria-label="name" id="name"
+                formControlName="name" required>
+            </div>
+
+            <div class="mb-4 w-100">
+              <label for="surname" class="form-label">Cognome</label>
+              <input type="text" class="form-control" placeholder="Cognome" aria-label="surname" id="surname"
+                formControlName="surname" required>
+            </div>
+
+            <div class="mb-4 w-100">
+              <label for="role" class="form-label">Ruoli</label>
+              <select class="form-select"id="role" formControlName="role" required>
+                  @for (item of availableRoles; track $index) {
+                      <option [ngValue]="item">{{item}}</option>
+                  } 
+              </select>
+            </div>
+
+            <div class="mb-4 w-100">
+              <label for="email" class="form-label">Email</label>
+              <input type="text" class="form-control" placeholder="Email" aria-label="email" id="email"
+                formControlName="email" required>
+            </div>
+
+            <div class="mb-5 w-100">
+              <label for="password" class="form-label">Password</label>
+              <div class="input-group  d-flex align-items-center">
+                <input [type]="showPassword ? 'text' : 'password'" class="form-control" placeholder="Password"
+                  aria-describedby="password" id="password" formControlName="password" required>
+                <span id="password" class="material-symbols-outlined input-group-text" (click)="onShowPassword()">
+                  {{showPassword ? 'visibility' : 'visibility_off'}}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+              id="new-employeeForm"><b>Annulla</b></button>
+            <button type="submit" class="btn btn-primary"  [disabled]="registerForm.invalid"><b>Salva</b></button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

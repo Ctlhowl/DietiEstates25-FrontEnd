@@ -127,7 +127,7 @@
                 <div class="col-sm mb-3">
                     @for (addon of InputFormAddons; track $index) {
                         <input type="checkbox" class="btn-check" [id]="'btn-check-' + addon.name" [value]="addon.name" [checked]="isAddonSelected(addon.name)">
-                        <label  style="width: 200px;" class="btn btn-outline-secondary m-1" [for]="'btn-check-' + addon.name">{{addon.name}}</label>
+                        <label  style="width: 200px;" class="btn btn-primary m-1" [for]="'btn-check-' + addon.name">{{addon.name}}</label>
                     }
               </div>
         </div>
@@ -140,7 +140,7 @@
         </div> 
         <hr class="custom-line-bold">
         <div class="text-center">
-            <button type="submit" style="width: 200px;" class="btn btn-success" [disabled]="estateForm.invalid">Salva</button>
+            <button type="submit" style="width: 200px;" class="btn btn-primary" [disabled]="estateForm.invalid">Salva</button>
         </div>
     </form>
 </div>

@@ -35,6 +35,6 @@ export class AccountService {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${localStorage.getItem('authToken')}`
     });
-    return this.http.put<ApiResponse<User>>(`${this.apiAccount}`,updatedUser,{headers});
+    return this.http.put<ApiResponse<User>>(`${this.apiAccount}`, updatedUser, {headers});
   }
 }
