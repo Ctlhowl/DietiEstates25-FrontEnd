@@ -25,11 +25,13 @@
 
         <div class="col-12 col-md-4 mt-3 align-items-md-center mt-md-0">
             <div class="d-flex justify-content-md-end justify-content-center gap-2">
-                <div class="section d-flex align-items-center btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#historyOfferModal">
-                    <span class="material-symbols-outlined me-1">chat</span>
-                    <b>Proponi Offerta</b>
-                </div>
-                <app-history-offer [estateId]="estate.id!"></app-history-offer>
+                @if(isLogged){
+                    <div class="section d-flex align-items-center btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#historyOfferModal">
+                        <span class="material-symbols-outlined me-1">chat</span>
+                        <b>Proponi Offerta</b>
+                    </div>
+                    <app-history-offer [estateId]="estate.id!"></app-history-offer>
+                }
 
                 <div class="section d-flex align-items-center favorite">
                     <span class="material-icons-sharp">{{ isFavorite ? 'favorite' : 'favorite_border' }}</span>

@@ -27,12 +27,14 @@ type NavItem = {
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
-  navDataUser: NavItem[] = [];
-  navDataGuest: NavItem[] = [];
-  userRole: string = "user";
-  isSidebarOpen = false;
+  protected isLogged: boolean = false;
+  protected navDataUser: NavItem[] = [];
+  protected navDataGuest: NavItem[] = [];
+  protected isSidebarOpen = false;
 
   ngOnInit(): void {
+    this.isLogged = localStorage.getItem("authToken") != null ? true : false;
+    
     this.navDataUser = [
       {
         routeLink: '/estates/my-offers',
@@ -56,7 +58,7 @@ export class NavbarComponent {
 
     this.navDataGuest = [
       {
-        routeLink: '/',
+        routeLink: '/login',
         icon: 'person',
         label: 'Accedi',
         role: 'guest',

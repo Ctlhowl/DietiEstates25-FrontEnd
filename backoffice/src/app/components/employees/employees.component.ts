@@ -51,47 +51,48 @@ export class EmployeesComponent implements OnInit {
   }
 
   private createForm() {
-      this.registerForm = new FormGroup({
-        name: new FormControl('', Validators.required),
-        surname: new FormControl('', Validators.required),
-        email: new FormControl('', [Validators.required, Validators.email]),
-        password: new FormControl('', Validators.minLength(6)),
-        role: new FormControl('', Validators.required)
-      });  
-    }
-  
-    protected onNewEmployee(): void{
-      document.getElementById('new-employeeForm')?.click();
-      const user: User = this.mapToUser(this.registerForm);
-      this.registrationService.register(user).subscribe(
-        {
-          next: (response: ApiResponse<User>) => {
-            this.users.push(response.data);
-          }
-        }
-      );
-    }
-  
-    protected mapToUser(form: FormGroup): User {
-        return {
-          name: form.get("name")?.value,
-          surname: form.get("surname")?.value,
-          email: form.get("email")?.value,
-          password: form.get("password")?.value,
-          role: form.get('role')?.value,
-          agency: localStorage.getItem('userAgency')
+    this.registerForm = new FormGroup({
+      name: new FormControl('', Validators.required),
+      surname: new FormControl('', Validators.required),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', Validators.minLength(6)),
+      role: new FormControl('', Validators.required)
+    });
+  }
+
+  protected onNewEmployee(): void {
+    document.getElementById('new-employeeForm')?.click();
+    
+    const user: User = this.mapToUser(this.registerForm);
+    this.registrationService.register(user).subscribe(
+      {
+        next: (response: ApiResponse<User>) => {
+          this.users.push(response.data);
         }
       }
-  
-    /**
-     * @description Show and hide password 
-     */
-    protected onShowPassword(): void {
-      this.showPassword = !this.showPassword;
+    );
+  }
+
+  protected mapToUser(form: FormGroup): User {
+    return {
+      name: form.get("name")?.value,
+      surname: form.get("surname")?.value,
+      email: form.get("email")?.value,
+      password: form.get("password")?.value,
+      role: form.get('role')?.value,
+      agency: localStorage.getItem('userAgency')
     }
+  }
+
+  /**
+   * @description Show and hide password 
+   */
+  protected onShowPassword(): void {
+    this.showPassword = !this.showPassword;
+  }
 
   protected deleteEmployee(id: number | undefined) {
-    if (confirm('Sei sicuro di voler eliminare questo dipendente? '  + id)) {
+    if (confirm('Sei sicuro di voler eliminare questo dipendente? ' + id)) {
       this.employeeService.deleteEmployee(id).subscribe({
         next: () => {
           this.users = this.users.filter(user => user.id !== id);

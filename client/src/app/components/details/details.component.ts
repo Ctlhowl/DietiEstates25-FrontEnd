@@ -17,6 +17,7 @@ import { Poi } from '../../interfaces/poi';
 export class DetailsComponent implements OnInit {
   @ViewChild(HistoryOfferComponent) historyOfferComponent!: HistoryOfferComponent;
     
+  protected isLogged: boolean = false;
   protected estate!: Estate;
   protected categoryCountMap: { [key: string]: number } = {};
 
@@ -26,6 +27,7 @@ export class DetailsComponent implements OnInit {
 
   ngOnInit(): void {
     const id = parseInt(this.route.snapshot.paramMap.get('id')!)
+    this.isLogged = localStorage.getItem("authToken") != null ? true : false;
     this.loadEstate(id);
   }
 

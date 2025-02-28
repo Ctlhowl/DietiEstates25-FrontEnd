@@ -21,7 +21,7 @@ export class ListComponent implements OnInit {
   protected iconName: string = 'favorite_border';
 
   private filter = {
-    userId: 1
+    userId: 2
   };
 
   constructor(private estateService: EstateService) { }

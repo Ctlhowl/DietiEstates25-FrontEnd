@@ -16,21 +16,25 @@
     <div class="d-flex me-5">
       <div id="navbarNavAltMarkup">
         <div class="navbar-nav">
-          @if(userRole == "user"){ @for(item of navDataUser; track $index){
-          <a [routerLink]="[item.routeLink]" class="nav-link" (click)="closeSidebar()">
-            <span class="icon">
-              <span class="material-symbols-outlined">{{ item.icon }}</span>
-            </span>
-            <span class="description">{{ item.label }}</span>
-          </a>
-          } }@else{ @for (item of navDataGuest; track $index) {
-          <a [routerLink]="[item.routeLink]" class="nav-link" (click)="closeSidebar()">
-            <span class="icon">
-              <span class="material-symbols-outlined">{{ item.icon }}</span>
-            </span>
-            <span class="description">{{ item.label }}</span>
-          </a>
-          } }
+          @if(isLogged){
+             @for(item of navDataUser; track $index){
+              <a [routerLink]="[item.routeLink]" class="nav-link" (click)="closeSidebar()">
+                <span class="icon">
+                  <span class="material-symbols-outlined">{{ item.icon }}</span>
+                </span>
+                <span class="description">{{ item.label }}</span>
+              </a>
+            }
+          }@else{ 
+            @for (item of navDataGuest; track $index) {
+            <a [routerLink]="[item.routeLink]" class="nav-link" (click)="closeSidebar()">
+              <span class="icon">
+                <span class="material-symbols-outlined">{{ item.icon }}</span>
+              </span>
+              <span class="description">{{ item.label }}</span>
+            </a>
+            } 
+          }
         </div>
       </div>
     </div>

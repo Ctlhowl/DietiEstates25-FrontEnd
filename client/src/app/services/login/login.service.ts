@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { ApiResponse } from '../../../../../backoffice/src/app/serialization/apiResponse';
 
 declare var google: any;
-
 @Injectable({
   providedIn: 'root'
 })
@@ -15,13 +14,24 @@ export class LoginService {
 
   constructor(private http: HttpClient) {}
 
-  public initGoogleLogin(): any {
-    google.accounts.id.initialize({
-      client_id: this.clientId,
-      callback: (response: any) => this.handleGoogleSignIn(response)
+  public initGoogleLogin(): Observable<boolean> {
+    return new Observable<boolean>((observer) => {
+      google.accounts.id.initialize({
+        client_id: this.clientId,
+        callback: (response: any) => {
+          if (response.credential) {
+            this.handleGoogleSignIn(response);
+            observer.next(true);
+            observer.complete();
+          } else {
+            observer.error('Google login failed');
+          }
+        }
+      });
+  
+      google.accounts.id.prompt();
+  
     });
-
-    return google;
   }
 
   // Gestisce la risposta del login
