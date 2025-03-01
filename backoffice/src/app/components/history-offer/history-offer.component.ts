@@ -1,5 +1,5 @@
 import { OfferService } from './../../services/offer/offer.service';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { Offer } from '../../interfaces/offer';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -18,7 +18,8 @@ export class HistoryOfferComponent implements OnChanges{
   
 
   @Input() estateId!: number;
-  
+  @Input() isVisible: boolean = false;
+  @Output() closeModal = new EventEmitter<void>();  
 
   constructor(private offerService: OfferService) {}
 
@@ -27,7 +28,6 @@ export class HistoryOfferComponent implements OnChanges{
       this.loadData(this.estateId);
     }
   }
-
 
   private loadData(estateId: number) {
     this.activeOffers = [];
@@ -81,8 +81,13 @@ export class HistoryOfferComponent implements OnChanges{
       {
         complete: () => {
           this.loadData(this.estateId);
+          this.close();
         }
       });
   }
 
+  public close() {
+    this.isVisible = false;
+    this.closeModal.emit();
+  }
 }
