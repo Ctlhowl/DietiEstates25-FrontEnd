@@ -1,9 +1,9 @@
 export interface Offer {
-    id: number;
+    id?: number;
     price: number;
-    idEstate?: number;
+    idEstate: number;
     emailUser: string;
     status: string;
-    createdAt?: string;
-    updatedAt?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
 }

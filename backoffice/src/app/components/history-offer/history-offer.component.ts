@@ -1,62 +1,88 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { OfferService } from './../../services/offer/offer.service';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Offer } from '../../interfaces/offer';
-import { OfferService } from '../../services/offer/offer.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
 
 @Component({
   selector: 'app-history-offer',
-  imports: [],
+  imports: [CommonModule,FormsModule],
   templateUrl: './history-offer.component.html',
   styleUrl: './history-offer.component.css'
 })
-export class HistoryOfferComponent{
+export class HistoryOfferComponent implements OnChanges{
   
   protected offers: Offer[] = []
   protected activeOffers: Offer[] = []
+  
 
   @Input() estateId!: number;
+  
 
-  constructor(private offerService: OfferService) {
-    this.loadData(this.estateId)
+  constructor(private offerService: OfferService) {}
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['estateId'] && changes['estateId'].currentValue) {
+      this.loadData(this.estateId);
+    }
   }
+
 
   private loadData(estateId: number) {
-    this.activeOffers = [
-      {
-        id: 1,
-        price: 1000,
-        emailUser: 'emailprova',
-        idEstate: 9,
-        status: "Delivered",
-        updatedAt: "23-02-2025"
+    this.activeOffers = [];
+    this.offers = [];
+    this.offerService.getOffers(estateId, 1, 2).subscribe({
+      next: (response) => {
+          if (response?.data?.length) {
+              response.data.forEach(offer => {
+                  if(offer.status == 'DELIVERED'){
+                    this.activeOffers.push(offer);
+                  }else{
+                    this.offers.push(offer);
+                  }
+              });
+          } else {
+              console.log('Nessuna offerta trovata.');
+          }
       },
-      {
-        id: 2,
-        price: 1002,
-        emailUser: 'Delivered',
-        idEstate: 9,
-        status: "Attesa",
-        updatedAt: "24-02-2025"
+      error: (error) => {
+          console.error('Errore nel recupero delle offerte:', error);
       }
-    ]
-
-
-    this.offers = [
-      {
-        id: 1,
-        price: 1000,
-        emailUser: 'emailprova',
-        idEstate: 9,
-        status: "Rfiutato",
-        updatedAt: "23-02-2025"
-      },
-      {
-        id: 2,
-        price: 1002,
-        emailUser: 'emailprova',
-        idEstate: 9,
-        status: "Rfiutato",
-        updatedAt: "24-02-2025"
-      }
-    ];
+    });
   }
+
+  public onAccept(offerId: number){
+    this.offerService.updateOffer(offerId,'ACCEPTED').subscribe(
+      {
+        complete: () => {
+          this.loadData(this.estateId);
+        }
+      });
+  }
+
+  public onReject(offerId: number) {
+    this.offerService.updateOffer(offerId,'DECLINED').subscribe(
+      {
+        complete: () => {
+          this.loadData(this.estateId);
+        }
+      });
+  }
+
+  public onSave() { 
+    const offer : Offer = {
+      idEstate: this.estateId,
+      price: 10000, 
+      emailUser: 'nonjdsnkasmandkdmv',
+      status: 'DELIVERED'
+    };
+    this.offerService.createOffer(offer).subscribe(
+      {
+        complete: () => {
+          this.loadData(this.estateId);
+        }
+      });
+  }
+
 }

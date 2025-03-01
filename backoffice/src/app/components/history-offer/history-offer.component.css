@@ -23,3 +23,7 @@
   background-color: #415a77;
   margin: 10px 0 10px;
 }
+
+.custom-modal-width .modal-dialog {
+  max-width: 70%; 
+}
