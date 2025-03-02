@@ -21,12 +21,12 @@
                     @for (item of offers; track $index) {
                     <tr style="height: 75px;">
                         <th scope="row">{{$index + 1}}</th>
-                        <th>{{item.createdAt}}</th>
-                        <th>{{item.price}}</th>
+                        <th>{{item.updatedAt | date:'yyyy-MM-dd'}}</th>
+                        <th>{{item.price}}€</th>
                         <th>{{item.status}}</th>
-                        @if (item.status === "Nuova Proposta") {
-                            <th><button class="btn btn-success">Accetta</button></th>
-                            <th><button class="btn btn-danger">Rifiuta</button></th>
+                        @if (item.status === "COUNTEROFFER") {
+                            <th><button class="btn btn-success" (click)="onAccept(item.id!)">Accetta</button></th>
+                            <th><button class="btn btn-danger" (click)="onReject(item.id!)">Rifiuta</button></th>
                         }@else {
                             <th></th>
                             <th></th>

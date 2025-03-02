@@ -24,6 +24,17 @@
   margin: 10px 0 10px;
 }
 
-.custom-modal-width .modal-dialog {
-  max-width: 70%; 
+.custom-modal-width {
+  max-width: 77%; 
+}
+
+.custom-label-width {
+  width: 138px; 
+}
+
+.custom-botton{
+  border-color: #0077b6;
+  background-color: #0077b6;
+  color: #fff;
+  width: 100px;
 }

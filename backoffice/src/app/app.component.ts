@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { SidenavComponent } from "./components/sidenav/sidenav.component";
 
@@ -15,5 +15,10 @@ export class AppComponent {
 
   get isNavbarVisibile(): boolean {
     return this.router.url === '/login';
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  clearLocalStorage(event: Event) {
+    localStorage.removeItem('authToken'); 
   }
 }

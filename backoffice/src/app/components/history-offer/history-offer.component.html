@@ -1,6 +1,6 @@
 @if(isVisible){
   <div class="modal modal-lg show d-block" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog custom-modal-width">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Storico Offerte</h5>
@@ -27,8 +27,13 @@
                 <th scope="row">{{$index + 1}}</th>
                 <td>{{item.updatedAt | date:'yyyy-MM-dd'}}</td>
                 <td>{{item.emailUser}}</td>
-                <td>{{item.price}}</td>
+                <td>{{item.price}}€</td>
                 <td>{{item.status}}</td>
+                <td>
+                  <label for="new-offer" class="form-label custom-label-width">
+                  <input type="number" step="1" class="form-control" placeholder="Controfferta" id="new-offer" [(ngModel)]="counterOffer" required> </label><button class="btn btn-info custom-botton" [disabled]="!counterOffer" 
+                  (click)="onSubmitCounterOffer(item,counterOffer!)">Invia</button>
+                </td>
                 <td><button class="btn btn-success" (click)="onAccept(item.id!)">Accetta</button></td>
                 <td><button class="btn btn-danger" (click)="onReject(item.id!)">Rifiuta</button></td>
               </tr>
@@ -54,7 +59,7 @@
                 <th scope="row">{{$index + 1}}</th>
                 <td>{{item.updatedAt | date:'yyyy-MM-dd'}}</td>
                 <td>{{item.emailUser}}</td>
-                <td>{{item.price}}</td>
+                <td>{{item.price}}€</td>
                 <td>{{item.status}}</td>
               </tr>
               }
@@ -67,14 +72,14 @@
             <div class="d-flex justify-content-center">
               <div class="mb-4 w-100 me-4">
                 <label for="new-offer" class="form-label">Proposta Esterna</label>
-                <input type="number" step="1" class="form-control" placeholder="Offerta" id="new-offer" required>
+                <input type="number" step="1" class="form-control" placeholder="Offerta" id="new-offer" [(ngModel)]="externalOffer" name="externalOffer" required>
               </div>
               <div class="mb-4 w-100">
                 <label for="new-offer-email" class="form-label">Email Esterna</label>
-                <input type="text" class="form-control" placeholder="Email" id="new-offer-email" required>
+                <input type="text" class="form-control" placeholder="Email" id="new-offer-email" [(ngModel)]="externalEmail" name="externalEmail" required>
               </div> 
             </div>
-            <button type="button" class="btn btn-primary">Salva</button>
+            <button type="button" class="btn btn-primary" [disabled]="!externalOffer || !externalEmail"(click)="onSave()">Salva</button>
           </form>
         </div>
       </div>

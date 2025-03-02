@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from "./components/navbar/navbar.component";
 
@@ -15,6 +15,11 @@ export class AppComponent {
   
   get isNavbarVisibile(): boolean {
     return this.router.url === '/login' || this.router.url === '/sign-up';
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  clearLocalStorage(event: Event) {
+    localStorage.removeItem('authToken'); 
   }
 }
 

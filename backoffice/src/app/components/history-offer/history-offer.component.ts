@@ -15,6 +15,9 @@ export class HistoryOfferComponent implements OnChanges{
   
   protected offers: Offer[] = []
   protected activeOffers: Offer[] = []
+  counterOffer: number | null = null;
+  externalOffer: number | null = null;
+  externalEmail: string = '';
   
 
   @Input() estateId!: number;
@@ -32,7 +35,7 @@ export class HistoryOfferComponent implements OnChanges{
   private loadData(estateId: number) {
     this.activeOffers = [];
     this.offers = [];
-    this.offerService.getOffers(estateId, 1, 2).subscribe({
+    this.offerService.getOffers(estateId, 1, 20).subscribe({
       next: (response) => {
           if (response?.data?.length) {
               response.data.forEach(offer => {
@@ -73,8 +76,8 @@ export class HistoryOfferComponent implements OnChanges{
   public onSave() { 
     const offer : Offer = {
       idEstate: this.estateId,
-      price: 10000, 
-      emailUser: 'nonjdsnkasmandkdmv',
+      price: this.externalOffer!, 
+      emailUser: this.externalEmail,
       status: 'DELIVERED'
     };
     this.offerService.createOffer(offer).subscribe(
@@ -83,6 +86,27 @@ export class HistoryOfferComponent implements OnChanges{
           this.loadData(this.estateId);
           this.close();
         }
+      });
+  }
+
+  onSubmitCounterOffer(retrievedOffer: Offer, newPrice: number) {
+    this.offerService.updateOffer(retrievedOffer.id!,'DECLINED').subscribe(
+      {
+        complete: () => {
+          const offer : Offer = {
+            price: newPrice, 
+            idEstate: this.estateId,
+            emailUser: retrievedOffer.emailUser,
+            status: 'COUNTEROFFER'
+          };
+          this.offerService.createOffer(offer).subscribe(
+            {
+              complete: () => {
+                this.loadData(this.estateId);
+                this.close();
+              }
+            });
+          }
       });
   }
 
