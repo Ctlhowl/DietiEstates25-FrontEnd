@@ -40,9 +40,9 @@
             <form>
                 <div class="mb-4 w-100">
                     <label for="new-offer" class="form-label">Nuova Proposta</label>
-                    <input type="number" step="1" class="form-control" placeholder="Proponi un Offerta" aria-label="new-offer" id="new-offer" required>
+                    <input type="number" step="1" class="form-control" placeholder="Proponi un Offerta" aria-label="new-offer" id="new-offer" [(ngModel)]="newOfferPrice!" name="externalOffer" required>
                 </div>
-                <button type="button" class="btn btn-primary">Invia Proposta</button>
+                <button type="button" class="btn btn-primary" [disabled]="!newOfferPrice" (click)="onSave()">Invia Proposta</button>
             </form>
         </div>
       </div>

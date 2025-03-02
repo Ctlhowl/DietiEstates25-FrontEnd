@@ -18,12 +18,20 @@
         <div class="navbar-nav">
           @if(isLogged){
              @for(item of navDataUser; track $index){
-              <a [routerLink]="[item.routeLink]" class="nav-link" (click)="closeSidebar()">
-                <span class="icon">
-                  <span class="material-symbols-outlined">{{ item.icon }}</span>
-                </span>
-                <span class="description">{{ item.label }}</span>
-              </a>
+              @if(item.label=== 'Logout'){
+                <a [routerLink]="[item.routeLink]" class="nav-link" (click)="onLogout()">
+                  <span class="icon">
+                    <span class="material-symbols-outlined" style="color: #d10000;">{{ item.icon }}</span>
+                  </span>
+                </a>
+              }@else {
+                <a [routerLink]="[item.routeLink]" class="nav-link" (click)="closeSidebar()">
+                  <span class="icon">
+                    <span class="material-symbols-outlined">{{ item.icon }}</span>
+                  </span>
+                  <span class="description">{{ item.label }}</span>
+                </a>
+              }
             }
           }@else{ 
             @for (item of navDataGuest; track $index) {

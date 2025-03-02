@@ -1,11 +1,14 @@
+import { AccountService } from './../../../../../backoffice/src/app/services/account/account.service';
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Offer } from '../../interfaces/offer';
 import { OfferService } from '../../services/offer/offer.service';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ApiResponse } from '../../serialization/apiResponse';
 
 @Component({
   selector: 'app-history-offer',
-  imports: [CommonModule],
+  imports: [CommonModule,FormsModule],
   templateUrl: './history-offer.component.html',
   styleUrl: './history-offer.component.css'
 })
@@ -13,8 +16,10 @@ export class HistoryOfferComponent implements OnChanges{
   @Input() estateId!: number;
 
   protected offers: Offer[] = []
+  newOfferPrice: number | null = null;
+  userEmail: string = '';
 
-  constructor(private offerService: OfferService) {}
+  constructor(private offerService: OfferService,private accountService: AccountService) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['estateId'] && changes['estateId'].currentValue) {
@@ -57,4 +62,32 @@ export class HistoryOfferComponent implements OnChanges{
         }
       });
   }
+
+  public onSave(){
+    this.accountService.getUserInfo().subscribe(
+      {
+        next: (response) => {
+          this.userEmail = response.data.email;
+        },
+        error: (error) => {
+          console.error("Errore nel recupero delle informazioni dell'utente", error);
+        },
+        complete: () => {
+          const offer : Offer = {
+            idEstate: this.estateId,
+            price: this.newOfferPrice!, 
+            emailUser: this.userEmail,
+            status: 'DELIVERED'
+          };
+          this.offerService.createOffer(offer).subscribe(
+            {
+              complete: () => {
+                this.loadData(this.estateId);
+              }
+            });
+          }
+        }
+    )
+  }
+    
 }

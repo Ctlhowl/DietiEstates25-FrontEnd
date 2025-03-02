@@ -1,5 +1,5 @@
 export interface Offer {
-    id: number;
+    id?: number;
     price: number;
     idEstate?: number;
     emailUser: string;

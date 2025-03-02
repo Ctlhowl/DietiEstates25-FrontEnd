@@ -54,6 +54,12 @@ export class NavbarComponent {
         label: `Profilo`,
         role: 'user',
       },
+      {
+        routeLink: '/estates',
+        icon: 'logout',
+        label: `Logout`,
+        role: 'user',
+      },
     ];
 
     this.navDataGuest = [
@@ -78,6 +84,14 @@ export class NavbarComponent {
    */
   closeSidebar() {
     this.isSidebarOpen = false;
+  }
+
+  onLogout(){
+    const confirmLogout = window.confirm('Sei sicuro di voler effettuare il logout?');
+    if (confirmLogout) {
+      localStorage.removeItem("authToken");
+      window.location.reload();
+    } 
   }
 
 }

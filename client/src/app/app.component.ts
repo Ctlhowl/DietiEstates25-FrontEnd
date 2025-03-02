@@ -16,10 +16,5 @@ export class AppComponent {
   get isNavbarVisibile(): boolean {
     return this.router.url === '/login' || this.router.url === '/sign-up';
   }
-
-  @HostListener('window:beforeunload', ['$event'])
-  clearLocalStorage(event: Event) {
-    localStorage.removeItem('authToken'); 
-  }
 }
 
