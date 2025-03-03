@@ -44,7 +44,7 @@ export class DetailsComponent implements OnInit {
         complete: () => {
           if (this.estate) {
             this.loadMap();
-            this.getCategoryCount(this.estate.location.poi);
+            this.getCategoryCount(this.estate.location.poi!);
           } else {
             console.error('Estate data or location is missing');
           }
@@ -57,8 +57,8 @@ export class DetailsComponent implements OnInit {
    * @description Load map component and set markers
    */
   private loadMap(): void {
-    const lat = this.estate.location.lat;
-    const lng = this.estate.location.lng;
+    const lat = this.estate.location.lat!;
+    const lng = this.estate.location.lng!;
 
     this.map = L.map('map').setView([lat, lng], 15);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {

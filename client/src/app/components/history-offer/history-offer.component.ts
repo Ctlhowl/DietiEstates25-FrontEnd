@@ -63,31 +63,48 @@ export class HistoryOfferComponent implements OnChanges{
       });
   }
 
+  public translate(status: string): string {
+    if(status === 'DECLINED'){
+      return "RIFIUTATO"
+    }
+    if(status === 'ACCEPTED'){
+      return "ACCETTATO"
+    }
+    if(status === 'DELIVERED'){
+      return "IN ATTESA"
+    }
+    
+    return "CONTROFFERTA"
+  }
+
   public onSave(){
-    this.accountService.getUserInfo().subscribe(
-      {
-        next: (response) => {
-          this.userEmail = response.data.email;
-        },
-        error: (error) => {
-          console.error("Errore nel recupero delle informazioni dell'utente", error);
-        },
-        complete: () => {
-          const offer : Offer = {
-            idEstate: this.estateId,
-            price: this.newOfferPrice!, 
-            emailUser: this.userEmail,
-            status: 'DELIVERED'
-          };
-          this.offerService.createOffer(offer).subscribe(
-            {
-              complete: () => {
-                this.loadData(this.estateId);
-              }
-            });
+    const confirmOffer = window.confirm('Sei sicuro di voler proseguire con la proposta di '+this.newOfferPrice+'€ ?');
+    if (confirmOffer){
+      this.accountService.getUserInfo().subscribe(
+        {
+          next: (response) => {
+            this.userEmail = response.data.email;
+          },
+          error: (error) => {
+            console.error("Errore nel recupero delle informazioni dell'utente", error);
+          },
+          complete: () => {
+            const offer : Offer = {
+              idEstate: this.estateId,
+              price: this.newOfferPrice!, 
+              emailUser: this.userEmail,
+              status: 'DELIVERED'
+            };
+            this.offerService.createOffer(offer).subscribe(
+              {
+                complete: () => {
+                  this.loadData(this.estateId);
+                }
+              });
+            }
           }
-        }
-    )
+      )
+    }
   }
     
 }

@@ -28,7 +28,7 @@
                 <td>{{item.updatedAt | date:'yyyy-MM-dd'}}</td>
                 <td>{{item.emailUser}}</td>
                 <td>{{item.price}}€</td>
-                <td>{{item.status}}</td>
+                <td>{{translate(item.status)}}</td>
                 <td>
                   <label for="new-offer" class="form-label custom-label-width">
                   <input type="number" step="1" class="form-control" placeholder="Controfferta" id="new-offer" [(ngModel)]="counterOffer" required> </label><button class="btn btn-info custom-botton" [disabled]="!counterOffer" 
@@ -60,7 +60,7 @@
                 <td>{{item.updatedAt | date:'yyyy-MM-dd'}}</td>
                 <td>{{item.emailUser}}</td>
                 <td>{{item.price}}€</td>
-                <td>{{item.status}}</td>
+                <td>{{translate(item.status)}}</td>
               </tr>
               }
             </tbody>

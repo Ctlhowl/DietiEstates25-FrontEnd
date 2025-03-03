@@ -13,5 +13,6 @@ export interface Filter {
     minServices?: number;
     maxServices?: number;
     userId?: number;
+    location?: Location;
     addons?: Addon[]; 
 }

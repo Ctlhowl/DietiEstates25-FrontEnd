@@ -34,8 +34,8 @@
             <div class="col-sm-2 mb-3">
                     <label for="contract" class="form-label">Tipo Contratto</label>
                     <select class="form-select" id="contract" formControlName="rental" required>
-                        <option value="Affitto" selected>Affitto</option>
-                        <option value="Vendita">Vendita</option>
+                        <option value="true" selected>Affitto</option>
+                        <option value="false">Vendita</option>
                         </select>
             </div>
             <div class="col-sm-2 mb-3">
@@ -55,6 +55,7 @@
         <div class="row m-3">
             <hr class="custom-line">
             <h4 class="mb-3">Informazioni Locazione</h4>
+            
     
             <div class="col-sm mb-3">
                 <label for="county" class="form-label">Provincia</label>

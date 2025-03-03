@@ -17,8 +17,4 @@ export class AppComponent {
     return this.router.url === '/login';
   }
 
-  @HostListener('window:beforeunload', ['$event'])
-  clearLocalStorage(event: Event) {
-    localStorage.removeItem('authToken'); 
-  }
 }

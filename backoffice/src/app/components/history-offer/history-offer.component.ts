@@ -73,6 +73,20 @@ export class HistoryOfferComponent implements OnChanges{
       });
   }
 
+  public translate(status: string): string {
+    if(status === 'DECLINED'){
+      return "RIFIUTATO"
+    }
+    if(status === 'ACCEPTED'){
+      return "ACCETTATO"
+    }
+    if(status === 'DELIVERED'){
+      return "IN ATTESA"
+    }
+    
+    return "CONTROFFERTA"
+  }
+  
   public onSave() { 
     const offer : Offer = {
       idEstate: this.estateId,

@@ -23,7 +23,7 @@
                         <th scope="row">{{$index + 1}}</th>
                         <th>{{item.updatedAt | date:'yyyy-MM-dd'}}</th>
                         <th>{{item.price}}€</th>
-                        <th>{{item.status}}</th>
+                        <th>{{translate(item.status)}}</th>
                         @if (item.status === "COUNTEROFFER") {
                             <th><button class="btn btn-success" (click)="onAccept(item.id!)">Accetta</button></th>
                             <th><button class="btn btn-danger" (click)="onReject(item.id!)">Rifiuta</button></th>
