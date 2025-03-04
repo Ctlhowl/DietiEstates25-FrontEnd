@@ -7,37 +7,37 @@
         <div class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3">
             <!-- Radio Buttons -->
             <div class="form-check radio-button-group">
-                <input class="radio-input" checked type="radio" name="rental" id="sale" />
+                <input class="radio-input" checked type="radio" name="rental" id="sale" [value]="false" [(ngModel)]="filters.rental" (change)="applyFilters()"/>
                 <label class="radio-label" style="width: 120px; text-align: center" for="sale">
                     Vendita
                 </label>
 
-                <input class="radio-input" type="radio" name="rental" id="rental" />
+                <input class="radio-input" type="radio" name="rental" id="rental" [value]="true" [(ngModel)]="filters.rental" (change)="applyFilters()" />
                 <label class="radio-label" style="width: 120px; text-align: center" for="rental">
                     Affitto
                 </label>
             </div>
 
             <!-- Dropdowns -->
-            <select class="form-select" id="category">
-                @for (item of InputFormCategories; track $index) { @if ($index == 0) {
-                <option selected [ngValue]="item.name">{{ item.name }}</option>
-                }@else {
-                <option [ngValue]="item.name">{{ item.name }}</option>
-                } }
+            <select class="form-select" id="category" [(ngModel)]="filters.category" (change)="applyFilters()">
+                <option [ngValue]="undefined" selected>Tutte le categorie</option> 
+        
+                @for (item of InputFormCategories; track $index) {
+                    <option [ngValue]="item.name">{{ item.name }}</option>
+                }
             </select>
 
-            <select class="form-select" id="county" required>
-                <option selected>Tutta Italia</option>
+            <select class="form-select" id="county" [(ngModel)]="fullCounty" (change)="loadCities($event); applyFilters()" required>
+                <option [ngValue]="undefined" selected>Tutta Italia</option>
                 @for (item of InputFormCounties; track $index) {
-                <option [ngValue]="item.countyCode + '-' + item.county" (click)="loadCities(item)">
+                <option [value]="item.countyCode + '-' + item.county">
                     {{ item.countyCode }} - {{ item.county }}
                 </option>
                 }
             </select>
 
-            <select class="form-select" id="city" required>
-                <option selected>Tutte i comuni</option>
+            <select class="form-select" id="city" [(ngModel)]="fullCity" (change)="applyFilters()" required>
+                <option [ngValue]="undefined" selected>Tutti i comuni</option>
                 @for (item of InputFormCities; track $index) {
                 <option [ngValue]="item.postalCode + '-' + item.city">
                     {{ item.postalCode }} - {{ item.city }}
@@ -61,8 +61,8 @@
             <div class="col-md-3 me-2">
                 <label for="price">Prezzo</label>
                 <div class="d-flex gap-2">
-                    <input class="form-control" type="number" placeholder="Da" />
-                    <input class="form-control" type="number" placeholder="A" />
+                    <input class="form-control" type="number" placeholder="Da" [(ngModel)]="filters.minPrice" (input)="applyFilters()"/>
+                    <input class="form-control" type="number" placeholder="A" [(ngModel)]="filters.maxPrice" (input)="applyFilters()"/>
                 </div>
             </div>
 
@@ -70,20 +70,21 @@
             <div class="col-md-3 me-2">
                 <label for="price">Superficie</label>
                 <div class="d-flex gap-2">
-                    <input class="form-control" type="number" placeholder="Da" />
-                    <input class="form-control" type="number" placeholder="A" />
+                    <input class="form-control" type="number" placeholder="Da" [(ngModel)]="filters.minMtq" (input)="applyFilters()" />
+                    <input class="form-control" type="number" placeholder="A" [(ngModel)]="filters.maxMtq" (input)="applyFilters()" />
                 </div>
             </div>
 
             <!-- Numero Stanze -->
             <div class="col-md-3">
                 <label for="price">Numero Stanze</label>
-                <select class="form-select" id="city" required>
-                    <option selected>1</option>
+                <select class="form-select" id="city"  [(ngModel)]="filters.minRooms" (change)="applyFilters()" required>
+                    <option [ngValue]="undefined" selected>Qualsiasi</option>
+                    <option>1</option>
                     <option>2</option>
                     <option>3</option>
                     <option>4</option>
-                    <option>> 4</option>
+                    <option [ngValue]="5">> 4</option>
                 </select>
             </div>
         </div>

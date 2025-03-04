@@ -1,4 +1,6 @@
 import { Addon } from "./addon";
+import { Category } from "./category";
+import { Location } from "./location";
 
 export interface Filter {
     category?: string;

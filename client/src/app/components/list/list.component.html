@@ -1,5 +1,5 @@
 <div class="container p-5">
-    <app-filter></app-filter>
+    <app-filter (filtersChanged)="applyFiltersOnEstates($event)"></app-filter>
     
     <hr class="custom-line-bold mt-5 mb-3">
     <div class="row text-center mb-3">

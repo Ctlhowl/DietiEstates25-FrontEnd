@@ -59,9 +59,9 @@
     
             <div class="col-sm mb-3">
                 <label for="county" class="form-label">Provincia</label>
-                <select class="form-select"id="county" formControlName="county" required>
+                <select class="form-select"id="county" formControlName="county" (change)="loadCities($event)" required>
                     @for (item of InputFormCounties; track $index) {
-                        <option [ngValue]="item.countyCode + '-' + item.county" (click)="loadCities(item)">{{item.countyCode}} - {{item.county}}</option>
+                        <option [value]="item.countyCode + '-' + item.county">{{item.countyCode}} - {{item.county}}</option>
                     } 
                 </select>
             </div>

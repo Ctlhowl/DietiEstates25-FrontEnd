@@ -100,7 +100,15 @@ export class EstateFormComponent implements OnInit {
           }));
         },
         complete: () => {
-          this.loadCities(this.InputFormCounties[0]);
+          this.locationService.getCities(this.InputFormCounties[0].countyCode).subscribe(
+            {
+              next: (response: any) => {
+                response.forEach((data: any) => {
+                  const city: City = { city: data.denominazione_ita, postalCode: data.cap };
+                  this.InputFormCities.push(city);
+                });
+              }
+            });
           const location = this.InputFormCounties[0].countyCode + '-' + this.InputFormCounties[0].county;
           this.estateForm.get('county')?.setValue(location);
         }
@@ -111,12 +119,13 @@ export class EstateFormComponent implements OnInit {
    * @description Fetches a list of cities for a given county and populates the InputFormCities.
    * @param {County} county - The county object containing a countyCode used to fetch cities. 
    */
-  protected loadCities(county: County): void {
+  protected loadCities(event: any): void {
+    const county = event.target.value;
     this.InputFormCities = [];
     this.spinner.show();
 
-
-    this.locationService.getCities(county.countyCode).subscribe(
+    const countyCode = county.split('-')[0];
+    this.locationService.getCities(countyCode).subscribe(
       {
         next: (response: any) => {
           response.forEach((data: any) => {
@@ -126,6 +135,7 @@ export class EstateFormComponent implements OnInit {
         },
         complete: () => {
           setTimeout(() => { this.spinner.hide(); }, 400);
+          console.log(this.InputFormCities[0])
         }
       });
   }
