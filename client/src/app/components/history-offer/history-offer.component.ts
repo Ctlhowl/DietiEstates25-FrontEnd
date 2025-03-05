@@ -29,7 +29,7 @@ export class HistoryOfferComponent implements OnChanges{
 
   private loadData(estateId: number) {
     this.offers = [];
-    this.offerService.getOffers(estateId, 1, 20).subscribe({
+    this.offerService.getOffers(estateId).subscribe({
       next: (response) => {
           if (response?.data?.length) {
               response.data.forEach(offer => {

@@ -7,19 +7,6 @@
                     <span class="material-symbols-outlined me-1">arrow_back_ios</span>
                     <b>Lista Annunci</b>
                 </div>
-
-                <!--
-                <div class="d-flex gap-2 justify-content-between">
-                    <div class="link d-flex align-items-center me-2">
-                        <span class="material-symbols-outlined me-1">arrow_back_ios</span>
-                        <b>Precedente</b>
-                    </div>
-                    <div class="link d-flex align-items-center">
-                        <b>Successivo</b>
-                        <span class="material-symbols-outlined ms-1">arrow_forward_ios</span>
-                    </div>
-                </div>
-                -->
             </div>
         </div>
 
@@ -31,11 +18,11 @@
                         <b>Proponi Offerta</b>
                     </div>
                     <app-history-offer [estateId]="estate.id!"></app-history-offer>
-                }
 
-                <div class="section d-flex align-items-center favorite">
-                    <span class="material-icons-sharp">{{ isFavorite ? 'favorite' : 'favorite_border' }}</span>
-                </div>
+                    <div class="section d-flex align-items-center favorite">
+                        <span class="material-icons-sharp">{{ isFavorite ? 'favorite' : 'favorite_border' }}</span>
+                    </div>
+                }
             </div>
         </div>
     </div>

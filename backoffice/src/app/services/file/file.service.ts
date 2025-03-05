@@ -20,7 +20,10 @@ export class FileService {
    * @returns An Observable containing the pre-signed URL.
    */
   public getPresignedUpload(file: string): Observable<ApiResponse<string>> {
-    return this.http.get<ApiResponse<string>>(`${this.apiS3}/presigned-upload`, { params: { file: file } });
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+    });
+    return this.http.get<ApiResponse<string>>(`${this.apiS3}/presigned-upload`, { headers, params: { file: file } });
   }
 
   /**
@@ -30,7 +33,9 @@ export class FileService {
    * @returns An Observable for tracking the upload request.
    */
   public uploadFileToS3(presignedUrl: string, file: File): Observable<any> {
-    const headers = new HttpHeaders({ 'Content-Type': file.type });
+    const headers = new HttpHeaders({
+      'Content-Type': file.type
+    });
 
     return this.http.put(presignedUrl, file, { headers, responseType: 'text' });
   }
@@ -40,8 +45,12 @@ export class FileService {
    * @param file Name of file to be deleted.
    * @returns An Observable containing the pre-signed URL.
    */
-   public getPresignedDelete(file: string): Observable<ApiResponse<string>> {
-    return this.http.get<ApiResponse<string>>(`${this.apiS3}/presigned-delete`, { params: { file: file } });
+  public getPresignedDelete(file: string): Observable<ApiResponse<string>> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+    });
+
+    return this.http.get<ApiResponse<string>>(`${this.apiS3}/presigned-delete`, {headers, params: { file: file } });
   }
 
   /**
@@ -54,6 +63,10 @@ export class FileService {
   }
 
   public deleteMetaFileEstate(file: string): Observable<ApiResponse<boolean>> {
-    return this.http.delete<ApiResponse<boolean>>(`${this.apiEstateHandle}/files`, { params: { file: file } })
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+    });
+
+    return this.http.delete<ApiResponse<boolean>>(`${this.apiEstateHandle}/files`, {headers, params: { file: file } })
   }
 }

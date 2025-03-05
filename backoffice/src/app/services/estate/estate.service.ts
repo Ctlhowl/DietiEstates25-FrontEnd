@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environments';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Estate} from '../../interfaces/estate';
 import { Observable } from 'rxjs';
 import { ApiResponse } from '../../serialization/apiResponse';
@@ -16,15 +16,27 @@ export class EstateService {
   constructor(private http: HttpClient) { }
 
   public save(estate: Estate): Observable<ApiResponse<Estate>> {
-    return this.http.post<ApiResponse<Estate>>(`${this.apiEstateHandle}/estates`, estate);
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+    });
+    
+    return this.http.post<ApiResponse<Estate>>(`${this.apiEstateHandle}/estates`, estate, {headers});
   }
 
   public edit(estate: Estate): Observable<ApiResponse<Estate>> {
-    return this.http.put<ApiResponse<Estate>>(`${this.apiEstateHandle}/estates`, estate);
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+    });
+
+    return this.http.put<ApiResponse<Estate>>(`${this.apiEstateHandle}/estates`, estate, {headers});
   }
 
   public delete(estateId: number): Observable<ApiResponse<Estate>> {
-    return this.http.delete<ApiResponse<Estate>>(`${this.apiEstateHandle}/estates`, { params: { estate: estateId } });
+    const headers = new HttpHeaders({
+        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+    });
+    
+    return this.http.delete<ApiResponse<Estate>>(`${this.apiEstateHandle}/estates`, {headers, params: { estate: estateId } });
   }
 
   public getByFilter(filter: Filter): Observable<ApiResponse<Estate[]>> {

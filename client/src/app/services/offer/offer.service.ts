@@ -13,19 +13,18 @@ export class OfferService {
 
   constructor(private http: HttpClient) { }
 
-  public getOffers(estateId: number,page: number,pageSize: number): Observable <ApiResponse<Offer[]>> {
+  public getOffers(estateId: number): Observable <ApiResponse<Offer[]>> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${localStorage.getItem('authToken')}`
     });
-    console.log(estateId)
-    return this.http.get<ApiResponse<Offer[]>>(`${this.apiOffers}/${estateId}?page=${page}&pageSize=${pageSize}`, { headers });
+    return this.http.get<ApiResponse<Offer[]>>(`${this.apiOffers}/${estateId}`, { headers });
   }
 
   public updateOffer(offerId: number,status: string): Observable <ApiResponse<Offer>> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${localStorage.getItem('authToken')}`
     });
-    return this.http.patch<ApiResponse<Offer>>(`${this.apiOffers}/${offerId}?status=${status}`, null, {headers});
+    return this.http.patch<ApiResponse<Offer>>(`${this.apiOffers}/${offerId}?status=${status}`, {headers});
   }
 
   public createOffer(offer: Offer): Observable<ApiResponse<Offer>> {
@@ -33,6 +32,13 @@ export class OfferService {
       'Authorization': `Bearer ${localStorage.getItem('authToken')}`
     });
     return this.http.post<ApiResponse<Offer>>(`${this.apiOffers}`, offer , {headers});
+  }
+
+  public getHistoryOfferByUser(userEmail: string): Observable<ApiResponse<Offer[]>> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+    });
+    return this.http.get<ApiResponse<Offer[]>>(`${this.apiOffers}?user=${userEmail}`, { headers});
   }
 
 }

@@ -135,7 +135,6 @@ export class EstateFormComponent implements OnInit {
         },
         complete: () => {
           setTimeout(() => { this.spinner.hide(); }, 400);
-          console.log(this.InputFormCities[0])
         }
       });
   }
@@ -166,8 +165,8 @@ export class EstateFormComponent implements OnInit {
       {
         next: (response: ApiResponse<Estate>) => {
           const estate = response.data;
-
-          this.loadCities({ countyCode: estate.location.countyCode, county: estate.location.county });
+          console.log(estate)
+          
           this.estateForm.patchValue(this.mapEstateToForm(estate));
 
           const addonsArray = this.estateForm.get('addons') as FormArray;
@@ -175,9 +174,14 @@ export class EstateFormComponent implements OnInit {
 
           const filesArray = this.estateForm.get('files') as FormArray;
           estate.files.forEach((file) => { filesArray.push(new FormControl(file)); });
+
+          this.loadCities({ countyCode: estate.location.countyCode, county: estate.location.county });
         },
         error: (err) => {
           console.log('Errore nel caricamento: ' + err.message);
+        },
+        complete: () => {
+          
         }
       }
     );
@@ -195,7 +199,7 @@ export class EstateFormComponent implements OnInit {
       title: estate.title,
       category: estate.category.name,
       description: estate.description,
-      rental: estate.rental ? 'Affitto' : 'Vendita',
+      rental: estate.rental,
       price: estate.price,
       mtq: estate.mtq,
       energyClass: estate.energyClass,
@@ -225,7 +229,7 @@ export class EstateFormComponent implements OnInit {
       rooms: this.estateForm.get('rooms')?.value,
       services: this.estateForm.get('services')?.value,
       location: this.mapFormToLocation(),
-      userId: 1,
+      userId: Number(localStorage.getItem("userId")),
       addons: this.mapFormToAddons(),
       files: this.mapUploadComponentToS3File()
     };

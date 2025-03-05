@@ -17,4 +17,5 @@ export interface Filter {
     userId?: number;
     location?: Location;
     addons?: Addon[]; 
+    favorite?: boolean;
 }

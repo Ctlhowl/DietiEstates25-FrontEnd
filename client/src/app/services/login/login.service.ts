@@ -34,12 +34,10 @@ export class LoginService {
     });
   }
 
-  // Gestisce la risposta del login
   private handleGoogleSignIn(response: any): void {
     const token = response.credential;
     console.log('Token ricevuto:', token);
 
-    // Invia il token al backend per la verifica
     this.sendTokenToBackend(token);
   }
 
@@ -48,9 +46,7 @@ export class LoginService {
     this.http.post<ApiResponse<{token: string}>>(this.apiLogin + '/google', { token })
       .subscribe({
         next:(response: ApiResponse<{token: string}>) => {
-          console.log('Risposta dal backend:', response);
           this.saveToken(response.data.token)
-          console.log(this.getUserId())
         },
         error: (error) => {
           console.error('Errore durante l\'invio del token:', error);
@@ -68,8 +64,9 @@ export class LoginService {
     if (decodedToken) {
       localStorage.setItem('userId', decodedToken.id); 
       localStorage.setItem('userRole', decodedToken.role);
+      localStorage.setItem('userEmail', decodedToken.email);
       if (this.getUserRole() === 'ROLE_MANAGER' || this.getUserRole() === 'ROLE_ADMIN'){
-        localStorage.setItem('userAgency',decodedToken.agency);
+        localStorage.setItem('userAgency', decodedToken.agency);
       }
     } 
   }
@@ -90,11 +87,13 @@ export class LoginService {
     return localStorage.getItem('userAgency');
   }
 
+  getUserEmail(): string | null {
+    return localStorage.getItem('userEmail');
+  }
+
   decodeToken(token: string): any {
-    try {
-      console.log(token)
-      
-      const parts = token.split('.'); // Divide il JWT in tre parti
+    try {      
+      const parts = token.split('.');
       if (parts.length !== 3) {
           console.error('Invalid token format');
           return null;
@@ -102,7 +101,7 @@ export class LoginService {
 
       const payload = token.split('.')[1];
       const decoded = atob(payload); 
-      return JSON.parse(decoded); // Converte in oggetto JS
+      return JSON.parse(decoded);
     } catch (error) {
       console.error('Errore nella decodifica del token', error);
       return null;
