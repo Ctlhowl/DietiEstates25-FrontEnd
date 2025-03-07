@@ -27,15 +27,15 @@ export class ListComponent implements OnInit {
 
   protected filters: Filter = {
     category: undefined,
-    rental: undefined, 
-    minPrice: undefined, 
-    maxPrice: undefined, 
-    minMtq: undefined, 
-    maxMtq: undefined, 
-    minRooms: undefined, 
+    rental: undefined,
+    minPrice: undefined,
+    maxPrice: undefined,
+    minMtq: undefined,
+    maxMtq: undefined,
+    minRooms: undefined,
     location: {
-      county: undefined,  
-      city: undefined    
+      county: undefined,
+      city: undefined
     },
     userId: undefined,
     favorite: undefined
@@ -55,17 +55,13 @@ export class ListComponent implements OnInit {
   }
 
   private loadEstates() {
+    this.loadFavoriteEstate();
+
     if (this.historyRoute) {
       this.loadEstatesByOffer();
       return ;
     }
     
-    if (this.favoriteRoute) {
-      this.loadFavoriteEstate();
-      return;
-    }
-
-    this.loadFavoriteEstate();
     this.loadEstatesByFilter(this.filters);
   }
   
@@ -88,8 +84,10 @@ export class ListComponent implements OnInit {
           offers.forEach((offer: Offer) => {
             this.estateService.getById(offer.idEstate!).subscribe(
               {
-                next: (response: ApiResponse<Estate>) => {
-                  this.estates.push(response.data);
+                next: (response: ApiResponse<Estate>) => {              
+                  if (!this.estates.some(e => e.id === response.data.id)) {
+                    this.estates.push(response.data);
+                  }
                 },
               }
             );
@@ -106,8 +104,16 @@ export class ListComponent implements OnInit {
     this.estateService.getByFilter(filter).subscribe(
       {
         next: (response: ApiResponse<Estate[]>) => {
+          
+          if (this.favoriteRoute) {
+            this.favoriteEstate = response.data;
+            this.estates = response.data;
+            return
+          }
+
           if (filter.favorite) {
             this.favoriteEstate = response.data;
+            return
           }
           
           this.estates = response.data;

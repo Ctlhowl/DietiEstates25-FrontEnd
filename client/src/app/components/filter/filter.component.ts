@@ -26,15 +26,15 @@ export class FilterComponent implements OnInit{
 
   filters: Filter = { 
     category:undefined,
-    rental: undefined, 
-    minPrice: undefined, 
-    maxPrice: undefined, 
-    minMtq: undefined, 
-    maxMtq: undefined, 
-    minRooms: undefined, 
+    rental: undefined,
+    minPrice: undefined,
+    maxPrice: undefined,
+    minMtq: undefined,
+    maxMtq: undefined,
+    minRooms: undefined,
     location: {
-      county: undefined,  
-      city: undefined    
+      county: undefined,
+      city: undefined
     }
   };
 

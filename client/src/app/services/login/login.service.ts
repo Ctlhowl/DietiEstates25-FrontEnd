@@ -50,7 +50,11 @@ export class LoginService {
         },
         error: (error) => {
           console.error('Errore durante l\'invio del token:', error);
-        }});
+        },
+        complete:() => {
+          window.location.reload();
+        },
+      });
   }
 
   login(credentials: { email: string; password: string }): Observable<ApiResponse<{token: string}>> {
