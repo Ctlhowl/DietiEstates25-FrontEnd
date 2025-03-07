@@ -142,6 +142,8 @@ export class ListComponent implements OnInit {
       addToFavorite: !this.isFavorite(estateId)
     };
 
+    console.log(favoriteEstate);
+
     this.estateService.modifyFavoriteRelationship(favoriteEstate).subscribe(
       {
         complete: () => {

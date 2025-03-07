@@ -5,7 +5,8 @@
           <h5 class="modal-title" id="historyOfferModalLabel">Storico Offerte</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body table-responsive">
+        @if (offers.length > 0) {
+          <div class="modal-body table-responsive">
             <table class="table align-middle">
                 <thead>
                   <tr>
@@ -35,7 +36,13 @@
                     }
                 </tbody>
             </table>
-        </div>
+          </div>
+        }@else {
+          <div class="modal-body">
+            <h6>Non sono presenti offerte per questa inserzione</h6>
+          </div>
+        }
+        
         <div class="modal-footer d-flex justify-content-start mt-5">
             <form>
                 <div class="mb-4 w-100">

@@ -17,11 +17,12 @@
                         <span class="material-symbols-outlined me-1">chat</span>
                         <b>Proponi Offerta</b>
                     </div>
-                    <app-history-offer [estateId]="estate.id!"></app-history-offer>
 
-                    <div class="section d-flex align-items-center favorite">
-                        <span class="material-icons-sharp">{{ isFavorite ? 'favorite' : 'favorite_border' }}</span>
+                    <div class="section d-flex align-items-center favorite" (click)="toggleFavorite(estate.id!)">
+                        <span class="material-icons-sharp">{{ isFavorite(estate.id!) ? 'favorite' : 'favorite_border' }}</span>
                     </div>
+
+                    <app-history-offer [estateId]="estate.id!"></app-history-offer>
                 }
             </div>
         </div>

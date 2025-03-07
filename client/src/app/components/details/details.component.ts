@@ -7,6 +7,8 @@ import L from "leaflet";
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HistoryOfferComponent } from "../history-offer/history-offer.component";
 import { Poi } from '../../interfaces/poi';
+import { FavoriteEstate } from '../../interfaces/favorite-estate';
+import { Filter } from '../../interfaces/filter';
 
 @Component({
   selector: 'app-details',
@@ -19,6 +21,7 @@ export class DetailsComponent implements OnInit {
     
   protected isLogged: boolean = false;
   protected estate!: Estate;
+  protected favoriteEstate: Estate[] = [];
   protected categoryCountMap: { [key: string]: number } = {};
 
   private map!: L.Map;
@@ -29,6 +32,7 @@ export class DetailsComponent implements OnInit {
     const id = parseInt(this.route.snapshot.paramMap.get('id')!)
     this.isLogged = localStorage.getItem("authToken") != null ? true : false;
     this.loadEstate(id);
+    this.loadFavoriteEstate();
   }
 
   /**
@@ -52,6 +56,24 @@ export class DetailsComponent implements OnInit {
       }
     );
   }
+
+  private loadFavoriteEstate() {
+      const filter: Filter = {
+        userId: Number(localStorage.getItem("userId")),
+        favorite: true,
+      }
+  
+      this.estateService.getByFilter(filter).subscribe(
+        {
+          next: (response: ApiResponse<Estate[]>) => {
+              this.favoriteEstate = response.data;
+          },
+          error: (err) => {
+            console.error('Errore durante il caricamento delle inserzioni:', err);
+          }
+        }
+      );
+    }
 
   /**
    * @description Load map component and set markers
@@ -116,11 +138,31 @@ export class DetailsComponent implements OnInit {
 
   }
   
-  /**
-   * @description Check if the estate has been added to favorites
-   */
-  get isFavorite(): boolean {
-    return true;
+   /**
+     * @description Check if the estate has been added to favorites
+     */
+    protected isFavorite(estateId: number): boolean {
+      return this.favoriteEstate.find(fe => fe.id == estateId) ? true : false;
+    }
+  
+    /**
+     * @description Add or Remove favorite relationship between user and estate
+     * @param estateId ID of estate
+     */
+  protected toggleFavorite(estateId: number) {
+    const favoriteEstate: FavoriteEstate = {
+      userId: Number(localStorage.getItem("userId")),
+      estateId: estateId,
+      addToFavorite: !this.isFavorite(estateId)
+    };
+
+    this.estateService.modifyFavoriteRelationship(favoriteEstate).subscribe(
+      {
+        complete: () => {
+          this.loadFavoriteEstate();
+        },
+      }
+    );
   }
 
 }
