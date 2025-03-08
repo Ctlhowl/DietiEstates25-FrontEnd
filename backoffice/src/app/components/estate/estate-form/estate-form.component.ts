@@ -222,7 +222,7 @@ export class EstateFormComponent implements OnInit {
       title: this.estateForm.get('title')?.value,
       category: this.estateForm.get('category')?.value,
       description: this.estateForm.get('description')?.value,
-      rental: this.estateForm.get('rental')?.value === 'Affitto',
+      rental: this.estateForm.get('rental')?.value,
       price: this.estateForm.get('price')?.value,
       mtq: this.estateForm.get('mtq')?.value,
       energyClass: this.estateForm.get('energyClass')?.value,
