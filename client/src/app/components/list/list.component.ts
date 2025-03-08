@@ -62,7 +62,9 @@ export class ListComponent implements OnInit {
       return ;
     }
     
-    this.loadEstatesByFilter(this.filters);
+    if(!this.favoriteRoute){
+      this.loadEstatesByFilter(this.filters);
+    }
   }
   
   private loadFavoriteEstate() {
