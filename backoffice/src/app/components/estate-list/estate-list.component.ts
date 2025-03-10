@@ -16,7 +16,8 @@ export class EstateListComponent implements OnInit {
   @ViewChild(HistoryOfferComponent) historyOfferComponent!: HistoryOfferComponent;
   protected estates: Estate[] = [];
   protected estate?: Estate;
-  protected showModal: boolean = false;
+  showModal: { [key: number]: boolean } = {};
+
 
   private filter = {
     userId: Number(localStorage.getItem("userId")) ?? 0
@@ -58,14 +59,8 @@ export class EstateListComponent implements OnInit {
     }
   }
 
-  openModal() {
-    console.log("Apro la modale"); // Per debug
-    this.showModal = true;
-  }
-
-  closeModal() {
-    console.log("Chiudo la modale"); // Per debug
-    this.showModal = false;
-  }
+  toggleModal(estateId: number) {
+    this.showModal[estateId] = !this.showModal[estateId];
+}
 
 }

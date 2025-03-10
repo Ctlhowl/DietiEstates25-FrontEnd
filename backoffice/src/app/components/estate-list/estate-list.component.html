@@ -51,12 +51,12 @@
                                 <p class="card-text limited-text">{{ estate.description }}</p>
             
                                 <div class="mt-auto d-flex justify-content-between">
-                                    <div class="offer" (click)="showModal = true">  
+                                    <div class="offer" (click)="toggleModal(estate.id!)">  
                                         <span class="material-symbols-outlined me-1">list</span>
                                         <b>Gestisci Offerte</b>
                                     </div>
                                     @if(showModal){
-                                    <app-history-offer [estateId]="estate.id!" [isVisible]="showModal" (closeModal)="showModal = false"></app-history-offer>
+                                    <app-history-offer [estateId]="estate.id!" [isVisible]="showModal[estate.id!]" (closeModal)="toggleModal(estate.id!)"></app-history-offer>
                                     }
                                     <div class="d-flex justify-content-between">
                                         <div class="edit me-5" [routerLink]="['/estate/edit', estate.id]" routerLinkActive="router-link-active">  
