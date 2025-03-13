@@ -31,8 +31,8 @@
                 <td>{{translate(item.status)}}</td>
                 <td>
                   <label for="new-offer" class="form-label custom-label-width">
-                  <input type="number" step="1" class="form-control" placeholder="Controfferta" id="new-offer" [(ngModel)]="counterOffer" required> </label><button class="btn btn-info custom-botton" [disabled]="!counterOffer" 
-                  (click)="onSubmitCounterOffer(item,counterOffer!)">Invia</button>
+                  <input type="number" step="1" class="form-control" placeholder="Controfferta" [id]="'new-offer-'+item.id!"  [(ngModel)]="counterOffers[item.id!]" required> </label><button class="btn btn-info custom-botton" [disabled]="!counterOffers[item.id!]" 
+                  (click)="onSubmitCounterOffer(item,counterOffers[item.id!])">Invia</button>
                 </td>
                 <td><button class="btn btn-success" (click)="onAccept(item.id!)">Accetta</button></td>
                 <td><button class="btn btn-danger" (click)="onReject(item.id!)">Rifiuta</button></td>

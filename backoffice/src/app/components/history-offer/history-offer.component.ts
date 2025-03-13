@@ -15,7 +15,7 @@ export class HistoryOfferComponent implements OnChanges{
   
   protected offers: Offer[] = []
   protected activeOffers: Offer[] = []
-  counterOffer: number | null = null;
+  counterOffers: { [key: number]: number } = {};
   externalOffer: number | null = null;
   externalEmail: string = '';
   

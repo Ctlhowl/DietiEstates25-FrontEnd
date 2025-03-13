@@ -24,7 +24,7 @@ export class OfferService {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${localStorage.getItem('authToken')}`
     });
-    return this.http.patch<ApiResponse<Offer>>(`${this.apiOffers}/${offerId}?status=${status}`, {headers});
+    return this.http.patch<ApiResponse<Offer>>(`${this.apiOffers}/${offerId}?status=${status}`,null, {headers});
   }
 
   public createOffer(offer: Offer): Observable<ApiResponse<Offer>> {
