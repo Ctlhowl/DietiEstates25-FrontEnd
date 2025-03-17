@@ -88,6 +88,10 @@ export class HistoryOfferComponent implements OnChanges{
   }
   
   public onSave() { 
+    if(this.externalOffer == null || this.externalOffer <= 0){
+      alert('Errore: il prezzo dell\'offerta deve essere un valore positivo')
+      return
+    }
     const offer : Offer = {
       idEstate: this.estateId,
       price: this.externalOffer!, 
@@ -104,6 +108,10 @@ export class HistoryOfferComponent implements OnChanges{
   }
 
   onSubmitCounterOffer(retrievedOffer: Offer, newPrice: number) {
+    if(newPrice <= 0){
+      alert('Errore: il prezzo dell\'offerta deve essere un valore positivo')
+      return
+    }
     this.offerService.updateOffer(retrievedOffer.id!,'DECLINED').subscribe(
       {
         complete: () => {

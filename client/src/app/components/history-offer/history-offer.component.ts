@@ -72,6 +72,10 @@ export class HistoryOfferComponent implements OnChanges{
   }
 
   public onSave(){
+    if(this.newOfferPrice == null || this.newOfferPrice <= 0){
+      alert('Errore: il prezzo dell\'offerta deve essere un valore positivo')
+      return
+    }
     const confirmOffer = window.confirm('Sei sicuro di voler proseguire con la proposta di '+this.newOfferPrice+'€ ?');
     if (confirmOffer){
       const offer : Offer = {
@@ -85,6 +89,7 @@ export class HistoryOfferComponent implements OnChanges{
         {
           complete: () => {
             this.loadData(this.estateId);
+            alert('Proposta inviata con successo!')
           }
         }
       );

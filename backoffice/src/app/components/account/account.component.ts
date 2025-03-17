@@ -62,11 +62,20 @@ export class AccountComponent implements OnInit{
   protected onEditUser(): void {
     document.getElementById('edit-userForm')?.click();
     
-    this.user = this.mapToUser(this.form);
-    console.log(this.user);
+    const confirmOffer = window.confirm('Sei sicuro di voler modificare l\'account?');
+    if(confirmOffer){
+      this.user = this.mapToUser(this.form);
 
-    this.accountService.updateUser(this.user).subscribe();
-  }
+      this.accountService.updateUser(this.user).subscribe(
+        {
+          complete: () => {
+            alert('Account modificato con successo!')
+          }
+        }
+      );
+    }
+    }
+    
 
   /**
    * @description Show and hide password 

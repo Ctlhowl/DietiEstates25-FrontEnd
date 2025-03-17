@@ -62,7 +62,7 @@ export class ProfileComponent {
     document.getElementById('edit-userForm')?.click();
     
     this.user = this.mapToUser(this.form);
-    console.log(this.user);
+    
 
     this.accountService.updateUser(this.user).subscribe();
   }
